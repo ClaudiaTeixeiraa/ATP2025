@@ -7,4 +7,5 @@
 -  Resolução do "**Jogo dos fósforos**" incluindo o Nível 1 e o Nível 2:
 -  Fiz ambos os níveis no mesmo ficheiro Python através de uma *if clause* que depende do jogador que a pessoa a jogar escolher:
 -  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/bf3fa0cbc4780fadb854e1741ab79fef8a25917d/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt1.png)
+-  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/4c0bdfc99817ce51843255148a64dad4660cddab/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt2.png)
 -  ![image_alt](
