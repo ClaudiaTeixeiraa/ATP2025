@@ -1,6 +1,6 @@
 - **TPC 2**
   
-- Na aula do dia **22 de Setembro** e **25 de Setembro**, foram atribuidos dois trabalhos para casa. Aqui está a minha resolução dos mesmos: 
+- Na aula do dia **22 de Setembro**, foi atribuído um trabalho para casa: O Jogo dos Fósforos. Aqui está a minha resolução do mesmo (incluindo os dois níveis do jogo). 
 - **Autor:** Cláudia Isabel Ribeiro Teixeira (**A110414**)
 -  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/ffd0a10a1c1303a2a439cda594d9faebdf964e2a/foto%20formal%20(2).jpg)
 
