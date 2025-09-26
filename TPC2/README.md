@@ -89,10 +89,7 @@ while True:
         print("Foi divertido. Talvez joguemos mais para a próxima. Adeusss")
         break
 ```
-- Ainda, os prints retirados do ficheiro que criei no VSCode:
--  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/bf3fa0cbc4780fadb854e1741ab79fef8a25917d/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt1.png)
--  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/4c0bdfc99817ce51843255148a64dad4660cddab/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt2.png)
--  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/521702f4cd69315197156593f12109bf537209e0/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt3.png)
+
 
 
 
