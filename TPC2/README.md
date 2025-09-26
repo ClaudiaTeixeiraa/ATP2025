@@ -1,5 +1,5 @@
 - **TPC 2**
-- **TPC 1**
+  
 - Na aula do dia **22 de Setembro** e **25 de Setembro**, foram atribuidos dois trabalhos para casa. Aqui está a minha resolução dos mesmos: 
 - **Autor:** Cláudia Isabel Ribeiro Teixeira (**A110414**)
 -  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/ffd0a10a1c1303a2a439cda594d9faebdf964e2a/foto%20formal%20(2).jpg)
