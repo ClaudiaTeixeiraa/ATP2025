@@ -11,7 +11,7 @@
 -  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/521702f4cd69315197156593f12109bf537209e0/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt3.png)
 
 - Insiro aqui também o código sem ser por print, caso queira testar:
-- ´´´
+- ```python
   print("Olá! Vamos jogar o jogo dos 21 fósforos. O jogo baseia-se na subtração de números (1, 2, 3 ou 4) ao número 21 alternadamente.")
 print("Quem for a pessoa a substrair o último 1, perde.")
 
@@ -94,6 +94,6 @@ while True:
     if resposta.lower() != "sim":
         print("Foi divertido. Talvez joguemos mais para a próxima. Adeusss")
         break
-´´´
+```
 
 
