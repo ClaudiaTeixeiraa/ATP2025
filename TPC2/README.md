@@ -23,13 +23,12 @@ def jogo():
                 try:
                     primeiro = int(input("Escolhe um número: "))
                     if primeiro in números:
-                        break #Este break autoriza o jogo a prosseguir ao acabar com este while loop
+                        break 
                     else:
                         print("Esse número não está na lista. Escolhe um número entre 1 e 4.")
                 except ValueError:
                         print("Ups. Parece que essa resposta é inválida.")
                         primeiro = int((input("Escolhe um número: ")))
-                #Este try e except ValueError servem para invalidar dados que não sejam números como queremos
 
             fósforos = fósforos - primeiro
             print(f"Sobram agora {fósforos} fósforos.")
@@ -41,9 +40,7 @@ def jogo():
             elif primeiro == 3:
                 escolha = 2
             else:
-                escolha = números[0]
-            #Este números[0] indica a posição do número que temos na lista números. Neste caso, na posição 0 temos o número 1
-            #Poderia só ter escrito "escolha = 1" como está acima. Só fiz de duas maneiras diferentes para me lembrar que posso fazê-lo
+                escolha = 1
             print(f"Agora é a minha vez! Eu escolho o número {escolha}.")
             fósforos = fósforos - (escolha)
             print(f"Boa! Com as nossas escolhas agora temos {str(fósforos)}.")
