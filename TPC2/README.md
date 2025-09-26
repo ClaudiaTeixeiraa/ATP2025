@@ -5,12 +5,8 @@
 -  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/ffd0a10a1c1303a2a439cda594d9faebdf964e2a/foto%20formal%20(2).jpg)
 
 -  Resolução do "**Jogo dos fósforos**" incluindo o Nível 1 e o Nível 2:
--  Fiz ambos os níveis no mesmo ficheiro Python através de uma *if clause* que depende do jogador que a pessoa a jogar escolher:
--  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/bf3fa0cbc4780fadb854e1741ab79fef8a25917d/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt1.png)
--  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/4c0bdfc99817ce51843255148a64dad4660cddab/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt2.png)
--  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/521702f4cd69315197156593f12109bf537209e0/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt3.png)
-
-- Insiro aqui também o código sem ser por print, caso queira testar:
+-  Fiz ambos os níveis no mesmo ficheiro Python através de uma *if clause* que depende do jogador que a pessoa a jogar escolher.
+-  Insiro aqui  o código sem ser por print, caso queira testar:
  ```python
 print("Olá! Vamos jogar o jogo dos 21 fósforos. O jogo baseia-se na subtração de números (1, 2, 3 ou 4) ao número 21 alternadamente.")
 print("Quem for a pessoa a substrair o último 1, perde.")
@@ -84,16 +80,21 @@ def jogo():
             print("O jogo acabou. Talvez possamos jogar de novo.")
         
     else:
-        print("Infelizmente, essa resposta não é válida.")
-        jogador = input ("Preferes ser o primeiro a jogar (Jogador 1) ou o segundo (Jogador 2)? ")
+        print("Infelizmente, essa resposta não é válida. Tenta novamente.")
+        
     return 
 
 while True:
     jogo()
-    resposta = input("Queres jogar de novo? ")
+    resposta = input("Queres jogar de novo (sim / não)? ")
     if resposta.lower() != "sim":
         print("Foi divertido. Talvez joguemos mais para a próxima. Adeusss")
         break
 ```
+- Ainda, os prints retirados do ficheiro que criei no VSCode:
+-  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/bf3fa0cbc4780fadb854e1741ab79fef8a25917d/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt1.png)
+-  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/4c0bdfc99817ce51843255148a64dad4660cddab/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt2.png)
+-  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/521702f4cd69315197156593f12109bf537209e0/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt3.png)
+
 
 
