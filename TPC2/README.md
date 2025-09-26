@@ -5,8 +5,9 @@
 -  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/ffd0a10a1c1303a2a439cda594d9faebdf964e2a/foto%20formal%20(2).jpg)
 
 -  Resolução do "**Jogo dos fósforos**" incluindo o Nível 1 e o Nível 2:
+  
 -  Fiz ambos os níveis no mesmo ficheiro Python através de uma *if clause* que depende do jogador que a pessoa a jogar escolher.
--  Insiro aqui  o código sem ser por print, caso queira testar:
+-  Insiro aqui  o código, caso queira testar:
  ```python
 print("Olá! Vamos jogar o jogo dos 21 fósforos. O jogo baseia-se na subtração de números (1, 2, 3 ou 4) ao número 21 alternadamente.")
 print("Quem for a pessoa a substrair o último 1, perde.")
