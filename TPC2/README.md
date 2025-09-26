@@ -11,4 +11,5 @@
 -  ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/521702f4cd69315197156593f12109bf537209e0/Resolu%C3%A7%C3%A3oDoJogoDosF%C3%B3sforospt3.png)
 
 - Insiro aqui também o código sem ser por print, caso queira testar:
+- 
 
