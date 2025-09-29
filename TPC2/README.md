@@ -14,7 +14,7 @@ print("Quem for a pessoa a substrair o último 1, perde.")
 
 def jogo():
     jogador = input ("Preferes ser o primeiro a jogar (jogador 1) ou o segundo (jogador 2)? ")
-    if jogador.lower() == "jogador 1":
+    if jogador == "jogador 1":
         números = [1, 2, 3, 4]
         print("OK! Tu podes começar.")
         fósforos = 21
@@ -49,7 +49,7 @@ def jogo():
             print("Como tens de retirar o último fósforo, perdeste. Talvez da próxima vez consigas entender o padrão.")
                 
 
-    elif jogador.lower() == "jogador 2":
+    elif jogador == "jogador 2":
         print("Tudo bem, então eu começo. Vamos lá!")
         números = [1, 2, 3, 4]
         fósforos = 21
