@@ -7,7 +7,7 @@ Autora: Cláudia Isabel Ribeiro Teixeira (A110414)
 ![image_alt](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/77557153f49b6a14713aa4e3b2b5c516b8586747/foto%20formal.jpg)
 
 Segue o código criado para resolver o TPC:
-´´´python
+```python
 
 print("Seja bem-vind@ à nossa aplicação! Contamos com um menu que suprirá as suas necessidades.")
 
@@ -156,4 +156,4 @@ while True:
     print("Tenha um bom dia. Adeusss")
     break
 
-    ´´´
+    ```
