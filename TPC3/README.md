@@ -63,6 +63,7 @@ while True:
     else:
       print("Ups parece que ainda não tens lista. Para que possas escolher a opção 3 deves antes passar pela 1 ou 2.")
 
+
   elif escolha == 4:
     if lista:
       def media(lista):
