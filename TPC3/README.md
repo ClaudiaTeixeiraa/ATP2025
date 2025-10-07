@@ -28,13 +28,12 @@ def menu():
   return escolha
 
 lista = []
-
 while True:
   escolha = menu()
 
   if escolha == 1:
     import random
-    tamanho = random.randint(2, 50) 
+    tamanho = random.randint(2, 50) #Escolhi que no máximo a lista terá 15 elementos e no mínimo 2
     lista = [random.randint(1, 100) for _ in range(tamanho)]
     print(f"Ok, aqui vai a sua lista criada aleatoriamente: {lista}")
 
@@ -62,7 +61,6 @@ while True:
 
     else:
       print("Ups parece que ainda não tens lista. Para que possas escolher a opção 3 deves antes passar pela 1 ou 2.")
-
 
   elif escolha == 4:
     if lista:
@@ -110,13 +108,16 @@ while True:
      if lista:
       def cresce(lista):
         n = len(lista)
-        for i in range(n-1):
-          for j in range(0,n-i-1):
-            if lista[j] > lista [j + 1]:
-              lista[j],lista[j+1] = lista [j + 1],lista[j]
+        i = 0
+        while i < n-1:
+            j = 0
+            while j < n-i-1:
+                if lista[j] > lista[j+1]:
+                    lista[j],lista[j+1] = lista[j+1],lista[j]
+                j = j + 1
+            i = i + 1
         return lista
       lista = cresce(lista)
-
       print(f"A tua lista por ordem crescente é {lista}")
 
      else:
@@ -127,10 +128,14 @@ while True:
      if lista:
       def decresce(lista):
         n = len(lista)
-        for i in range(n-1):
-          for j in range(0,n-i-1):
-            if lista[j] < lista [j + 1]:
-              lista[j],lista[j+1] = lista [j + 1],lista[j]
+        i = 0
+        while i < n-1:
+            j = 0
+            while j < n-i-1:
+                if lista[j] < lista[j+1]:
+                    lista[j],lista[j+1] = lista[j+1],lista[j]
+                j = j + 1
+            i = i + 1
         return lista
       lista = decresce(lista)
       print(f"A tua lista por ordem decrescente é {lista}")
