@@ -27,8 +27,9 @@ def menu():
   escolha = int(input("Insira o número da ação que quer realizar: "))
   return escolha
 
+c = True
 lista = []
-while True:
+while c == True:
   escolha = menu()
 
   if escolha == 1:
@@ -159,7 +160,8 @@ while True:
 
 
   elif escolha == 0:
+    c = False
     print("Tenha um bom dia. Adeusss")
-    break
+
 
     ```
