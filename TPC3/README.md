@@ -9,7 +9,7 @@ Na aula do dia **2 de Outubro**, foi atribuído um trabalho para casa: **Criar u
 Segue o código criado para resolver o TPC:
 ```python
 
-print("Seja bem-vinda/o à minha aplicação! Aqui está o menu com as opções de ação que quer realizar.")
+print("Seja bem-vinda/o à minha aplicação! Aqui está o menu com as opções da ação que quer realizar.")
 
 def menu():
   print("""
