@@ -1,6 +1,6 @@
-Ao resolver o TPC 3: **Aplicação para manipulação de listas de inteiros**, nas opções 7 e 8 acabei por fazer algo alterado relativamnete ao que a indicação pedia. O suposto era dizer somente se a lista estava em ordem crescente ou decrescente. No entanto, resolvi de outra forma, ao escolher a opção 7, o meu código devolve a lista já em ordem crescente e na opção 8, em decrescente. Para evitar atualizar a ultima edição do meu ficheiro README e comprovar que fiz o TPC a tempo, decidi criar este outro ficheiro para colocar o código como pedido no exercício. Como acredito que a minha primeira resolução é também válida e útil, decidi não alterar o ficheiro README inicial. 
+Ao resolver o TPC 3: **Aplicação para manipulação de listas de inteiros**, nas opções 7 e 8 acabei por fazer algo alterado relativamente ao que a indicação pedia. O suposto era dizer somente se a lista estava em ordem crescente ou decrescente. No entanto, resolvi de outra forma, ao escolher a opção 7, o meu código devolve a lista já em ordem crescente e na opção 8, em decrescente. Para evitar atualizar a ultima edição do meu ficheiro README e comprovar que fiz o TPC a tempo, decidi criar este outro ficheiro para colocar o código como pedido no exercício. Como acredito que a minha primeira resolução é também válida e útil, decidi não alterar o ficheiro README inicial. 
 
-Segue o código a seguir exatamnete a indicação do enunciado: 
+Segue o código a seguir exatamente a indicação do enunciado: 
 ```python
 print("Seja bem-vinda/o à minha aplicação! Aqui está o menu com as opções de ação que quer realizar.")
 
