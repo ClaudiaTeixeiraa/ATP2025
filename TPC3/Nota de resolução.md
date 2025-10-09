@@ -27,7 +27,7 @@ while c == True:
 
   if escolha == 1:
     import random
-    tamanho = random.randint(2, 50) #Escolhi que no máximo a lista terá 15 elementos e no mínimo 2
+    tamanho = random.randint(2, 50) 
     lista = [random.randint(1, 100) for _ in range(tamanho)]
     print(f"Ok, aqui vai a sua lista criada aleatoriamente: {lista}")
 
