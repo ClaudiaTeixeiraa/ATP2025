@@ -6,14 +6,16 @@ Autora: Cláudia Isabel Ribeiro Teixeira **(A110414)**
 - 
 ![image](https://github.com/ClaudiaTeixeiraa/ATP2025/blob/50853c9a0b9cb98c9196bc095d8ef1134162d2fd/foto%20formal.jpg)
 -
-***Notas de resolução**
+**Notas de resolução**
 -
-- Como sugerido no eneunciado, decidi crair 2 outras funções para a minha app.
+- Como sugerido no enunciado, decidi criar 2 outras funções para a minha app.
     - **1ª opção**: Escolha 6 no menu
         - Ao selecionar esta opção, a pessoa tem a oportunidade de anular a compra de um bilhete que fez anteriormente.
     - **2ª opção**: Escolha 7 no menu
         - Ao selecionar esta opção, a pessoa tem acesso à ocupação da sala que selecionar, em percentagem.
 
+Resolução
+-
 - Aqui segue o código que criei para a aplicação:
 ```python
 sala1 = (150, [], "Twilight")
