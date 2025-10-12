@@ -42,13 +42,13 @@ def disponivel(cinema,filme,lugar):
     if filme.lower() == sala[2].lower():
         if lugar in sala[1] or lugar > sala[0]:
           print("""      O lugar não está disponível""")
-          return False #O lugar não está disponível
+          return False 
         else:
           print("""      O lugar está disponível""")
-          return True #O lugar está diponível
+          return True 
 
   print("""      Parece que o filme que inseriu não se encontra no nosso sistema. Tente novamente.""")
-  return False #O filme não está na lista
+  return False 
 
 
 def vendebilhete(cinema,filme,lugar):
