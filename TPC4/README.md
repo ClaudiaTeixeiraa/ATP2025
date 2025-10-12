@@ -16,6 +16,7 @@ Autora: Cláudia Isabel Ribeiro Teixeira **(A110414)**
 - Às minhas salas iniciais, decidi adicionar mais 2 salas para além das que estão no enunciado:
     - sala3 = (140, [], "Jaws")
     - sala4 = (175, [], "LaLaLand")
+- Nos meus "print" deixei muitos espaços para que a dar run ao programa ele fique bem organizado. Questão somente estética.
 
 Resolução
 -
@@ -90,6 +91,7 @@ def anularBilhete(cinema,sala,filme,lugar):
       print("      Parece que esse lugar não está marcado como ocupado. Verifique o seu bilhete novamente.")
       return
 
+
 def ocupação(cinema,sala,filme):
   for sala in cinema:
     if filme.lower() == sala[2].lower(): 
@@ -156,6 +158,7 @@ while c == True:
     filme = str(input("      Insira o filme para o qual quer anular o seu bilhete: "))
     lugar = int(input("      Insira o lugar que quer anular na sala: "))
     print(anularBilhete(cinema,sala,filme,lugar))
+
 
   elif escolha == "7":
     filme = str(input("      Insira o filme: "))
