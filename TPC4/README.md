@@ -13,6 +13,9 @@ Autora: Cláudia Isabel Ribeiro Teixeira **(A110414)**
         - Ao selecionar esta opção, a pessoa tem a oportunidade de anular a compra de um bilhete que fez anteriormente.
     - **2ª opção**: Escolha 7 no menu
         - Ao selecionar esta opção, a pessoa tem acesso à ocupação da sala que selecionar, em percentagem.
+- Às minhas salas iniciais, decidi adicionar mais 2 salas para além das que estão no enunciado:
+    - sala3 = (140, [], "Jaws")
+    - sala4 = (175, [], "LaLaLand")
 
 Resolução
 -
