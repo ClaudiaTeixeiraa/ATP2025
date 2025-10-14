@@ -97,7 +97,7 @@ def ocupação(cinema,sala,filme):
     if filme.lower() == sala[2].lower(): 
       disponiveis = sala[0]-len(sala[1])
       percentagem = ((int(disponiveis) // int(sala[0]))*100)
-      print(f"""      Para o filme que escolheu, a sala está {percentagem}% ocupada.""")
+      print(f"""      Para o filme que escolheu, a sala está {percentagem}% desocupada.""")
       return 
 
   print(f"""      Parece que o filme que escolheu não está no catálogo.""")
