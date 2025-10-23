@@ -15,7 +15,10 @@ Notas de Resolução
 - Ao selecionar a opção 2, consegue adicionar alunos à mas estes só vão ser adicionados ao ficheiro assim que selecionar a opção 5.
 - Na opção 5 decidi que o meu ficheiro abrisse em "a"(append) e não "w"(write), com receio de perder os meus dados anteriormente inseridos.
 - Ao escolher a opção 6 consegue ver o que está dentro do ficheiro de maneira organizada sem ter de abrir o ficheiro da turma em si.
+- O ficheiro "Turma.txt" está organizado de maneira a ser fácil de perceber. Separei as categorias nome, id, notas... não com ";" mas sim com espaços e barras para a informação ficar fácil de interpretar.
+
 - 
+  
 
 ```python
 print("""Seja bem-vinda/o à nossa aplicação de gestão de alunos.No nosso menu terá acesso às ações que pode realizar.""" )
