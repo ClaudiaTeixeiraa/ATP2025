@@ -8,7 +8,7 @@ Autora: Cláudia Isabel Ribeiro Teixeira (A110414)
 - 
 Notas de Resolução
 - 
-- Queria deixar uma nota sobre o TPC passado. Ele está corretamente na pasta "TPC4" no entanto, dentro do READ.ME está com o título "TPC 3". Foi um lapso. O conteúdo que está na pasta é totalmente correspondente ao TPC 4, somente o título é que está errado.
+- Queria deixar uma nota sobre o TPC passado. Ele está corretamente na pasta "TPC4" no entanto, dentro do README está com o título "TPC 3". Foi um lapso. O conteúdo que está na pasta é totalmente correspondente ao TPC 4, somente o título é que está errado.
 - Para além disso, queria deixar claro que nos TPCs passados fiz copypaste do meu código ao invés de inserir o ficheiro python, espero que não haja problema. De qualquer modo, deixarei em todos os próximos TPCs não só o código copiado e colado mas também o ficheiro dentro da pasta correspondente ao trabalho.
 - O ficheiro txt da turma que desenvolvi através da app de gestão de alunos encontra-se dentro da pasta TPC5.
 - O código que criei apresenta espaços "a mais" nos "print" por questões de estética para quando der run ao meu programa, ele ficar alinhado e visualmente apelativo.
