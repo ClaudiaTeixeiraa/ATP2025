@@ -9,10 +9,11 @@ Autora: Cláudia Isabel Ribeiro Teixeira (A110414)
 Notas de Resolução
 - 
 - Queria deixar uma nota sobre o TPC passado. Ele está corretamente na pasta "TPC4" no entanto, dentro do READ.ME está com o título "TPC 3". Foi um lapso. O conteúdo que está na pasta é totalmente correspondente ao TPC 4, somente o título é que está errado.
-- Para além disso, queria deixar claro que nos TPCs passados fiz copypaste do meu código ao invés de inserir o ficheiro python, espero que não haja problema. De qualquer modo, deixarei em todos os próximos TPCs não só o código copiado e colado mas também o ficheiro dentro da pasta correspondente ao trabalho. Anexo ainda o ficheiro txt da turma que criei com o meu código.
+- Para além disso, queria deixar claro que nos TPCs passados fiz copypaste do meu código ao invés de inserir o ficheiro python, espero que não haja problema. De qualquer modo, deixarei em todos os próximos TPCs não só o código copiado e colado mas também o ficheiro dentro da pasta correspondente ao trabalho.
+- O ficheiro txt da turma que desenvolvi através da app de gestão de alunos encontra-se dentro da pasta TPC5.
 - O código que criei apresenta espaços "a mais" nos "print" por questões de estética para quando der run ao meu programa, ele ficar alinhado e visualmente apelativo.
 - Ao resolver este TPC consegui pôr em prática o que aprendemos na aula teórica. Apesar de já começarmos a ter uma certa afinidade com a criação de apps com um menu interativo, não deixa de ser um desafio que exige uma boa interpretação de listas. O meu código é funcional e permite a criação de uma turma. Cada opção permite realizar a ação desejada.
-- Ao selecionar a opção 2, consegue adicionar alunos à mas estes só vão ser adicionados ao ficheiro assim que selecionar a opção 5.
+- Ao selecionar a opção 2, consegue adicionar alunos à turma mas estes só vão ser adicionados ao ficheiro assim que selecionar a opção 5.
 - Na opção 5 decidi que o meu ficheiro abrisse em "a"(append) e não "w"(write), com receio de perder os meus dados anteriormente inseridos.
 - Ao escolher a opção 6 consegue ver o que está dentro do ficheiro de maneira organizada sem ter de abrir o ficheiro da turma em si.
 - O ficheiro "Turma.txt" está organizado de maneira a ser fácil de perceber. Separei as categorias nome, id, notas... não com ";" mas sim com espaços e barras para a informação ficar fácil de interpretar.
