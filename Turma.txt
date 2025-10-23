@@ -1,0 +1,6 @@
+     NOME     //     ID     //  NOTA TPC  //  NOTA PROJETO  //  NOTA TESTE  
+ Beatriz Gomes Fonseca  //  19367  //  14.6  //  13.1  //  11.7   
+ Tiago Costa Silva  //  92742  //  16.0  //  19.2  //  10.2   
+ Matilde Marinho Rodrigues  //  19368  //  14.2  //  10.0  //  9.4   
+ Rodrigo Oliveira Montes  //  22973  //  17.0  //  19.3  //  17.2   
+ Carolina Nogueira   //  91799  //  16.5  //  14.0  //  13.6   
