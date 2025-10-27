@@ -9,12 +9,12 @@ Autora: Cláudia Isabel Ribeiro Teixeira (A110414)
 Notas de resolução
 - 
 - Na resolução deste trabalho tivemos de reunir numa aplicação as funções que desenvolvemos durante a aula TP.
-- Na aula a nossa lista com dados metereológicos era relativamnete curta por isso, decidi criar mais dados e deixar a minha lista mais comprida de modo a explorar as funções do código ainda melhor.
+- Na aula, a nossa lista com dados metereológicos era relativamnete curta por isso, decidi criar mais dados e deixar a minha lista mais comprida de modo a explorar as funções do código ainda melhor.
 - Decidi adicionar uma função "extra": Listar os dados que a plataforma tem. Fiz isso para que a pessoa a interagir com o código consiga ver com quantos dados mais ao menos está a lidar com antes mesmo de criar um ficheiro de texto (Opção 3 no menu) e depois ter de abrir esse mesmo ficheiro (Opção 4 do menu).
 - Todas as outras opções do menu são fiéis às alineas do guião da aula. 
 - De maneira geral, fazer este trabalho foi interessante. Principalmente a criação de gráficos que nos ajudam tanto a interpretar os dados que temos.
-- Como usual, deixo aqui o meu código porém, anexarei também o ficheiro python e o ficheiro de texto que criei na pasta do TPC6.
-- Relativamente ao ficheiro de texto, criei-o enquanto testava o meu código mas ao escolher a opção 4 consegue criar uma infinidade de ficheiros de texto. No entendo, pela imutabilidade da lista de dados nesta aplicação, independentemente do nome do ficheiro, o conteúdo será o mesmo.
+- Como usual, deixo aqui o meu código, porém, anexarei também o ficheiro python e o ficheiro de texto que criei.
+- Relativamente ao ficheiro de texto, criei-o enquanto testava o meu código mas ao escolher a opção 4 consegue criar uma infinidade de ficheiros de texto. No entanto, pela imutabilidade da lista de dados nesta aplicação, independentemente do nome do ficheiro, o conteúdo será o mesmo.
 
 ```python
 print("""Seja bem-vinda/o à nossa aplicação de Metereologia. No nosso menu terá acesso às ações que pode realizar.""" )
