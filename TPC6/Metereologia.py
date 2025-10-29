@@ -44,7 +44,7 @@ def medias(tabMeteo):
 
 
 def guardaTabMeteo(t, fnome):
-    with open(fnome,"w",encoding='utf-8' ) as f: 
+    with open(fnome,"a",encoding='utf-8' ) as f: 
         for dia in t:
             f.write(f"{dia[0][0]}; {dia[0][1]}; {dia[0][2]}; {dia[1]}; {dia[2]}; {dia[3]}\n")
        
@@ -266,3 +266,4 @@ while c == True:
     
     else:
         print("     A opção selecionada não corresponde a nenhuma das opções do menu. Tente novamente.")
+
