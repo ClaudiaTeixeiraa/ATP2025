@@ -10,11 +10,13 @@ Notas de resolução
 - 
 - Na resolução deste trabalho tivemos de reunir numa aplicação as funções que desenvolvemos durante a aula TP.
 - Na aula, a nossa lista com dados metereológicos era relativamnete curta por isso, decidi criar mais dados e deixar a minha lista mais comprida de modo a explorar as funções do código ainda melhor.
-- Decidi adicionar uma função "extra": Listar os dados que a plataforma tem. Fiz isso para que a pessoa a interagir com o código consiga ver com quantos dados mais ao menos está a lidar com antes mesmo de criar um ficheiro de texto (Opção 3 no menu) e depois ter de abrir esse mesmo ficheiro (Opção 4 do menu).
-- Todas as outras opções do menu são fiéis às alineas do guião da aula. 
+- Decidi adicionar uma função "extra": Listar os dados que a plataforma tem (Opção 1). Fiz isso para que a pessoa a interagir com o código consiga ver com quantos dados mais ao menos está a lidar antes mesmo de criar um ficheiro de texto (Opção 3 no menu) e depois ter de abrir esse mesmo ficheiro (Opção 4 do menu).
+- Para além da opção 1, adicionei também a opção 11. Ao selecionar a opção 11, a pessoa a usar o programa tem a oportunidade de adicionar os próprios dados à lista e se selecionar depois a opção 3, consegue guardar as alterações num ficheiro de texto. 
+- Todas as outras opções do menu são fiéis às alineas do guião da aula.
+- Nas opções 3 e 4 escolhi abrir o ficheiro com "with open(fnome,"r") as f:" para que não tenha de o fechar explicitamente com "f.close" ou corra o risco de me esquecer de o fechar. 
 - De maneira geral, fazer este trabalho foi interessante. Principalmente a criação de gráficos que nos ajudam tanto a interpretar os dados que temos.
-- Como usual, deixo aqui o meu código, porém, anexarei também o ficheiro python e o ficheiro de texto que criei.
-- Relativamente ao ficheiro de texto, criei-o enquanto testava o meu código mas ao escolher a opção 4 consegue criar uma infinidade de ficheiros de texto. No entanto, pela imutabilidade da lista de dados nesta aplicação, independentemente do nome do ficheiro, o conteúdo será o mesmo.
+- Como usual, deixo aqui o meu código, porém, anexarei também o ficheiro python e um ficheiro de texto que criei.
+- Relativamente ao ficheiro de texto, criei-o enquanto testava o meu código mas ao escolher a opção 4 conseguiria criar uma infinidade de ficheiros de texto.
 
 ```python
 print("""Seja bem-vinda/o à nossa aplicação de Metereologia. No nosso menu terá acesso às ações que pode realizar.""" )
@@ -77,7 +79,6 @@ def carregaTabMeteo(fnome):
         for linha in f:
             campos = linha.split(";")
             res.append(((int(campos[0]), int(campos[1]), int(campos[2])), float(campos[3]), float(campos[4]), float(campos[5])))
-        f.close()
         return res
 
 
@@ -185,20 +186,51 @@ def grafTabMeteo(t):
 
 
 
+def adicionar(tabMeteo):
+    dados = int(input("     Quantos dias quer inserir? "))
+    while dados > 0: 
+        ano = int(input("     Insira o ano em número: "))
+        if ano in range(0,2026):
+            mês = int(input("     Insira o mês em número: "))
+            if mês in range(1,13):
+                dia = int(input("     Insira o dia em número: "))
+                if dia in range(1,32):
+                    tempmin = int(input("     Insira a temperatura mínima: "))
+                    if tempmin in range(-20,51):
+                        tempmax = int(input("     Insira a temperatura máxima: "))
+                        if tempmax in range(-20,51):
+                            precipitaçao = float(input("     Insira a precipitação (entre 0 e 1): "))
+                            tabMeteo.append(((ano,mês,dia), tempmin, tempmax, precipitaçao))
+                            dados = dados - 1
+                     
+                        else: 
+                            print("     O dado que inseriu não é válido. Tente novamente.") 
+                    else: 
+                        print("     O dado que inseriu não é válido. Tente novamente.") 
+                else: 
+                    print("     O dado que inseriu não é válido. Tente novamente.") 
+            else: 
+                print("     O dado que inseriu não é válido. Tente novamente.")                    
+        else: 
+            print("     O dado que inseriu não é válido. Tente novamente.")
+    return f"""     Neste momento a lista encontra-se assim: {tabMeteo}
+    """
+
+
 def menu():
-    print(""" 
-     Só poderá escolher as opções com os dados que já estão inseridos na nossa plataforma.    
+    print("""     
      No menu de operações abaixo selecione a opção que quer selecionar:
-    - 1: Listar os dados da plataforma;
-    - 2: Calcular a temperatura média de cada dia;
-    - 3: Guardar uma tabela meteorológica num ficheiro de texto;
-    - 4: Carregar uma tabela meteorológica de um ficheiro de texto;
-    - 5: Indicar a temperatura mínima mais baixa registada na tabela;
-    - 6: Devolver a amplitude térmica de cada dia [(data, amplitude)];
-    - 7: Indicar o dia em que a precipitação registada teve o seu valor máximo e indica esse valor;
-    - 8: Indicar os dias em que a precipitação foi superior a um limite definido por si;
-    - 9: Receber um tabela meteorológica e um limite p e retorna o maior número consecutivo de dias com precipitação abaixo desse limite;
-    - 10: Desenhar os gráficos da temperatura mínima, máxima e de pluviosidade;
+    - 1: Listar os dados da plataforma
+    - 2: Calcular a temperatura média de cada dia
+    - 3: Guardar uma tabela meteorológica num ficheiro de texto
+    - 4: Carregar uma tabela meteorológica de um ficheiro de texto
+    - 5: Indicar a temperatura mínima mais baixa registada na tabela
+    - 6: Devolver a amplitude térmica de cada dia [(data, amplitude)]
+    - 7: Indicar o dia em que a precipitação registada teve o seu valor máximo e indica esse valor
+    - 8: Indicar os dias em que a precipitação foi superior a um limite definido por si
+    - 9: Receber um limite p e retorna o maior número consecutivo de dias com precipitação abaixo desse limite
+    - 10: Desenhar os gráficos da temperatura mínima, máxima e de pluviosidade
+    - 11: Adicionar os seus próprios dados
     - 0: Sair da aplicação""")
     escolha = int(input("""     Insira o número correspondente à sua opção: """))
     return escolha
@@ -245,6 +277,8 @@ while c == True:
     elif escolha == 10:
         print(grafTabMeteo(tabMeteo1))
 
+    elif escolha == 11:
+        print(adicionar(tabMeteo1))
 
     elif escolha == 0:
         c = False
@@ -252,6 +286,5 @@ while c == True:
     
     else:
         print("     A opção selecionada não corresponde a nenhuma das opções do menu. Tente novamente.")
-
 ```
 
