@@ -13,7 +13,7 @@ Notas de resolução
 - Decidi adicionar uma função "extra": Listar os dados que a plataforma tem (Opção 1). Fiz isso para que a pessoa a interagir com o código consiga ver com quantos dados mais ao menos está a lidar antes mesmo de criar um ficheiro de texto (Opção 3 no menu) e depois ter de abrir esse mesmo ficheiro (Opção 4 do menu).
 - Para além da opção 1, adicionei também a opção 11. Ao selecionar a opção 11, a pessoa a usar o programa tem a oportunidade de adicionar os próprios dados à lista e se selecionar depois a opção 3, consegue guardar as alterações num ficheiro de texto. 
 - Todas as outras opções do menu são fiéis às alineas do guião da aula.
-- Nas opções 3 e 4 escolhi abrir o ficheiro com "with open(fnome,"r") as f:" para que não tenha de o fechar explicitamente com "f.close" ou corra o risco de me esquecer de o fechar. 
+- Nas opções 3 e 4 escolhi abrir o ficheiro com "with open(fnome,"a",encoding='utf-8' ) as f:" e "with open(fnome,"r") as f:" para que não tenha de o fechar explicitamente com "f.close" ou corra o risco de me esquecer de o fechar. 
 - De maneira geral, fazer este trabalho foi interessante. Principalmente a criação de gráficos que nos ajudam tanto a interpretar os dados que temos.
 - Como usual, deixo aqui o meu código, porém, anexarei também o ficheiro python e um ficheiro de texto que criei.
 - Relativamente ao ficheiro de texto, criei-o enquanto testava o meu código mas ao escolher a opção 4 conseguiria criar uma infinidade de ficheiros de texto.
@@ -65,7 +65,7 @@ def medias(tabMeteo):
 
 
 def guardaTabMeteo(t, fnome):
-    with open(fnome,"w",encoding='utf-8' ) as f: 
+    with open(fnome,"a",encoding='utf-8' ) as f: 
         for dia in t:
             f.write(f"{dia[0][0]}; {dia[0][1]}; {dia[0][2]}; {dia[1]}; {dia[2]}; {dia[3]}\n")
        
