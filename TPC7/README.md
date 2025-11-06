@@ -11,5 +11,5 @@ Notas de resolução
 - Resolver este teste foi uma boa atividade para perceber em que situação me encontro na cadeira.
 - Consegui detetar os meus pontos fracos o que foi bom para conseguir trabalhá-los.
 - Os exercícios eram sobre funções e métodos que já usamos anteriormente.
-- Não fiz nenhuma alteração a nada a não ser na terceira parte, na rede social, adicionei mais posts inicialmente para conseguir ver se as minhas alíneas estavam a funcionar bem com mais do que 1 dado como tinha no enunciado dado.
+- Não fiz nenhuma alteração a nada a não ser na terceira parte, na rede social, adicionei mais posts inicialmente para conseguir ver se as minhas alíneas estavam a funcionar bem com mais do que 1 dado como tinha no enunciado dado. Ainda, troquei o autor jcr por ucr para na alínea de 
 - Dentro deste pasta TPC7 deixo o caderno Jupyter com a resolução dos exercícios. 
