@@ -1,4 +1,4 @@
-RESOLUÇÃO DE UM TESTE DE AFERIÇÃO
+RESOLUÇÃO DE UM TESTE DE AFERIÇÃO (18/12/2025)
 - 
 Autora: Cláudia Teixeira (A110414)
 - 
