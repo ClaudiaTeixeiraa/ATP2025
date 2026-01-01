@@ -348,3 +348,19 @@ A função desocupar_balcaoTriagem não gera novos eventos, limitando-se a atual
 
 Assim, a lista de eventos contém apenas eventos futuros relevantes, enquanto as alterações internas de estado são tratadas diretamente no momento da ocorrência do evento.
 
+Ainda no ficheiro "Triagem.py" está a função tempo_medio_FilaTriagem que serve para obter dados acerca do tempo médio de espera na fila de triagem. Esta estatística vai ser usada mais à frente na interface de simulação:
+```
+def tempo_medio_FilaTriagem(doentes_atendidos):
+    diferenca = []
+    for doente in doentes_atendidos:
+        if doente["tentrada_triagem"] != None:
+            diferenca.append((doente["tentrada_triagem"] - doente["tchegada"]))
+
+    media = round(sum(diferenca)/len(diferenca),2)
+
+    return media
+```
+
+2.3. Consultório
+--
+
