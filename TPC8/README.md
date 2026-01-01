@@ -124,6 +124,7 @@ def Doentes(ficheiro):
 
 Através desta função, o doente, já carregado da base de dados, ganha agora ainda mais atributos. De todos estes, são relevantes mencionar agora consulta, especialidade e prioridade:
 - "consulta": temConsulta()
+- 
 - Sendo temConsulta():
 ```
 def temConsulta():
@@ -136,6 +137,7 @@ def temConsulta():
 A função temConsulta serve para diferenciar os pacientes que têm consulta marcada dos que não têm consulta porque na fila para a triagem serão organizados também por este estatuto. 
 
 - "especialidade": doenca()
+- 
 - Sendo doenca(): 
 ```
 def doenca():
@@ -167,6 +169,7 @@ def doenca():
 Esta função é fundamental porque define as proporções de cada especialidade, ou seja, o número de doentes com certa especialidade vai estar distribuído diferentemente. Por exemplo, um paciente tem uma maior probabilidade de apresentar um problema ou consulta de Medicina Geral (30%) do que de Endocrinologia (3%). Esta função também é um grande auxílio para mais tarde gerar a base de dados com os médicos da clínica. Assunto abordado mais à frente. A função gera um número aleatório entre 1 e 100 e cada especialidade tem um intervalo de números que pode ser maior ou menor consoante a “popularidade” da mesma. 
 
 -"prioridade": prioridadeIndividual(pessoa)
+
 -Sendo prioridadeIndividual(pessoa): 
 
 ```
