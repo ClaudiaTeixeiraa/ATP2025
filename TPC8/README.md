@@ -124,7 +124,7 @@ def Doentes(ficheiro):
 
 Através desta função, o doente, já carregado da base de dados, ganha agora ainda mais atributos. De todos estes, são relevantes mencionar agora consulta, especialidade e prioridade:
 - "consulta": temConsulta()
-- 
+  
 - Sendo temConsulta():
 ```
 def temConsulta():
@@ -137,7 +137,7 @@ def temConsulta():
 A função temConsulta serve para diferenciar os pacientes que têm consulta marcada dos que não têm consulta porque na fila para a triagem serão organizados também por este estatuto. 
 
 - "especialidade": doenca()
-- 
+  
 - Sendo doenca(): 
 ```
 def doenca():
@@ -239,19 +239,30 @@ def criaBalcoes(config_atual):
 
     return balcoes
 ```
+Agora que os balcões estão criados podem ser ocupados. Mas ainda não há nada que defina o tempo de triagem, por isso mesmo é que a função tempoTriagem foi criada:
+```
+def tempoTriagem(t_atual):
+    t_Triagem = max(0.5,np.random.normal(loc=3.0, scale=1.0))  # distribuição normal para tempo na triagem que em média demora 3 minutos e desvio padrão de 1 minuto
+    entrada_triagem = t_atual
+    saida_triagem = t_atual + t_Triagem
+    t_atual += t_Triagem
+    return entrada_triagem, saida_triagem, t_Triagem
+```
+Esta função usufrui da distribuição normal para gerar tempos de triagem que tendem para 3 minutos e podem sofrer um desvio-padrão de 1 minuto, garantindo variabilidade realista nos tempos de atendimento. Aqui também são registados os tempos que permitem atualizar o dicionário do doente e o balcão. garantindo variabilidade realista nos tempos de atendimento.
 
-Durante a simulação, a função ocupar_balcaoTriagem verifica quais balcões estão disponíveis e atribui doentes da fila, atualizando os tempos de entrada e saída de cada paciente, bem como o estado do balcão:
+Durante a simulação, a função ocupar_balcaoTriagem verifica quais balcões estão disponíveis e atribui doentes da fila, atualizando os tempos de entrada e saída de cada paciente, bem como o estado do balcão. Para além disso, cria o evento de SAI_TRIAGEM que vai ser fundamental para a simulação em si:
 ```
 def ocupar_balcaoTriagem(lista,balcoes,t_atual):
     fila_prioritario = lista[0]
     fila_resto=lista[1]
     eventos_gerados=[]
     for balcao in balcoes:
+        #se o balcão for prioritário e estiver livre
         if balcao["prioritario"] and balcao["disponivel"] and fila_prioritario:
-        # o max vai escolher qual o tempo em que o doente ocupa o balcão: Se o balcão ficar livre depois da chegada do doente, tentrada = t_atual; se o balcão ficou livre em antes da            chegada do doente, então o tentrada=tchegada  
-                doente = fila_prioritario.pop(0)  
-            entrada = max(t_atual, doente["tchegada"])  
-            _, saida, t_Triagem = tempoTriagem(entrada)
+            doente = fila_prioritario.pop(0)  #remove o primeiro paciente da fila
+            entrada = max(t_atual, doente["tchegada"])   #o max define o tempo de início da triagem como o maior entre t_atual e tchegada: se o balcão ficar livre antes da chegada do doente, usa tchegada; se estiver livre depois da chegada, usa t_atual
+
+            _, saida, t_Triagem = tempoTriagem(entrada) #atualiza os tempos
 
             balcao.update({
                 "doente": doente,
@@ -262,12 +273,14 @@ def ocupar_balcaoTriagem(lista,balcoes,t_atual):
                 "tempo_ocupado": balcao["tempo_ocupado"] + t_Triagem
             })
 
-            doente.update({
+            #também conseguimos atualizar os dados do paciente
+            doente.update({ 
                 "tentrada_triagem" : entrada,
                 "tsaida_triagem": round(saida,2),
                 "estado_final": "TRIAGEM"
             })
 
+            #e ainda, geramos um evento de saída de triagem
             evento = {
                 "tempo" : doente["tsaida_triagem"],
                 "tipo" : "SAI_TRIAGEM",
@@ -276,6 +289,7 @@ def ocupar_balcaoTriagem(lista,balcoes,t_atual):
             }
             eventos_gerados.append(evento)
 
+        #se o balcão não for prioritário e estiver livre 
         elif not balcao["prioritario"] and balcao["disponivel"] and fila_resto:
             doente = fila_resto.pop(0)
             entrada = max(t_atual, doente["tchegada"])
@@ -306,3 +320,31 @@ def ocupar_balcaoTriagem(lista,balcoes,t_atual):
 
     return lista, balcoes, eventos_gerados
 ```
+Após o atendimento ao balcão, os doentes são removidos do balcão e o seu estado é atualizado para “FILA_CONSULTORIO”, indicando que aguardam agora para consulta. Para que isto aconteça é necessário haver uma função que atualize o estado do balcão para livre novamente. A função que permite isto é desocupar_balcaoTriagem:
+```
+def desocupar_balcaoTriagem(balcoes, t_atual):
+    eventos_gerados = [] 
+    evento = None
+    for balcao in balcoes:
+        if not balcao["disponivel"] and t_atual >= balcao["saida"]:
+
+            doente = balcao["doente"]
+        
+            balcao.update({
+                    "doente": None,
+                    "disponivel": True,
+                    "entrada": None,
+                    "saida": None
+                })
+            
+            doente["estado_final"] = "FILA_CONSULTORIO" #registo
+
+            eventos_gerados.append(evento)
+    return balcoes, eventos_gerados
+```
+Neste contexto, os eventos do tipo SAI_TRIAGEM são gerados no momento em que um doente inicia a triagem, pois é nesse instante que se conhece o tempo de conclusão do serviço.
+
+A função desocupar_balcaoTriagem não gera novos eventos, limitando-se a atualizar o estado do sistema (libertação do balcão e transição do doente para a fila de consulta). Esta abordagem evita a criação de eventos redundantes e mantém a simulação consistente e eficiente.
+
+Assim, a lista de eventos contém apenas eventos futuros relevantes, enquanto as alterações internas de estado são tratadas diretamente no momento da ocorrência do evento.
+
