@@ -39,3 +39,14 @@ Considerando a disponibilização de uma base de dados contendo informação rel
     "bebe_ao_colo": false,
     "gravidez": false
 }
+```
+
+A cada paciente foram removidas algumas chaves que não seriam úteis no contexto da simulação e adicionamos: incapacidade, bebe_ao_colo, gravidez cujo valor é um boolean. Estas características seriam fundamentais para mais tarde definir prioridades. Para além da remoção, foram adicionadas estas chaves mas com algumas condições para fazer com que a base de dados se aproximasse da realidade:
+
+Pessoas com menos de 15 anos e mais de 50 anos não poderiam estar grávidas;
+
+Pessoas com menos de 15 anos não poderiam estar com bebé ao colo;
+
+Da base de dados toda, somente cerca de 20% das pessoas é que apresentam pelo menos um critério de prioridade;
+
+Após o estabelecimento das condições sobre os dados a tratar, iniciou-se a arquitetura para o funcionamento da clínica.
