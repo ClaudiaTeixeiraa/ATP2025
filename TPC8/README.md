@@ -52,9 +52,9 @@ Da base de dados toda, somente cerca de 20% das pessoas é que apresentam pelo m
 Após o estabelecimento das condições sobre os dados a tratar, iniciou-se a arquitetura para o funcionamento da clínica.
 
 2.1. Chegadas
-
+--
 Inicialmente para as chegadas, foi criada uma função para gerar chegadas de acordo com taxas geradas:
-
+```
 tfinal = 12*60
 
 def gera_tempos_chegada(tfinal):
@@ -81,7 +81,7 @@ def gera_tempos_chegada(tfinal):
 
     return tchegadas
 
-
+```
 A partir desta função, foi possível gerar todas as chegadas de pacientes antecipadamente, antes do início da simulação. Com base nas taxas definidas, foi implementada uma distribuição de Poisson não homogénea, em que a taxa de chegada de pacientes varia ao longo do dia. Registam-se maiores intensidades nos períodos de pico: no início do dia (das 9:00 às 11:00, correspondendo às primeiras duas horas de funcionamento da clínica, com taxa de chegada definida como 18/60) e no final da tarde (das 18:00 às 21:00, correspondendo às últimas três horas antes do fecho, com taxa de chegada definida como 16/60).
 
 Os tempos entre chegadas são gerados segundo uma distribuição exponencial, cuja média é inversamente proporcional à taxa de chegada, garantindo, desta forma, a caracterização de um processo de Poisson não homogéneo ao longo do dia definido por intervalo = np.random.exponential(1 / taxa).
@@ -90,7 +90,7 @@ Optou-se por não utilizar a função de pré-geração dos tempos de chegada, p
 
 LUCAS EXPLICA AS CHEGADAS PORQUE AGORA COM AS CONFIG_ATUAL NÃO SEI ESPECIFICAMENTE ONDE ESTÃO DEFINIDAS AS TAXAS; FALAR DA FUNÇÃO CHEGADA_VALIDA EM CHEGADAS.PY
 
-###2.2. Triagem
+2.2. Triagem
 --
 
 Agora que os pacientes já chegam à clínica e recebem um tempo de chegada, precisam de ser atendidos na triagem. Este passo é importante porque é quando os parâmetros de prioridade inicialmente atribuídos são usados para organizar os doentes na fila. Num novo ficheiro Triagem.py foi criada uma função:
@@ -123,6 +123,8 @@ def Doentes(ficheiro):
 ```
 
 Através desta função, o doente, já carregado da base de dados, ganha agora ainda mais atributos. De todos estes, são relevantes mencionar agora consulta, especialidade e prioridade:
+- "consulta": temConsulta()
+- Sendo temConsulta():
 ```
 def temConsulta():
     consulta = False
@@ -131,6 +133,10 @@ def temConsulta():
         consulta = True
     return consulta
 ```
+A função temConsulta serve para diferenciar os pacientes que têm consulta marcada dos que não têm consulta porque na fila para a triagem serão organizados também por este estatuto. 
+
+- "especialidade": doenca()
+- Sendo doenca(): 
 ```
 def doenca():
     n = random.randint(1,101)
@@ -158,6 +164,11 @@ def doenca():
         doenca = "Medicina Geral"
     return doenca
 ```
+Esta função é fundamental porque define as proporções de cada especialidade, ou seja, o número de doentes com certa especialidade vai estar distribuído diferentemente. Por exemplo, um paciente tem uma maior probabilidade de apresentar um problema ou consulta de Medicina Geral (30%) do que de Endocrinologia (3%). Esta função também é um grande auxílio para mais tarde gerar a base de dados com os médicos da clínica. Assunto abordado mais à frente. A função gera um número aleatório entre 1 e 100 e cada especialidade tem um intervalo de números que pode ser maior ou menor consoante a “popularidade” da mesma. 
+
+-"prioridade": prioridadeIndividual(pessoa)
+-Sendo prioridadeIndividual(pessoa): 
+
 ```
 def prioridadeIndividual(pessoa):
     prior = False
@@ -166,11 +177,15 @@ def prioridadeIndividual(pessoa):
     return prior
 ```
 
+A função de prioridade individual somente lê a base de dados e se a pessoa tiver alguma incapacidade (“incapacidade” : True), um bebé ao colo (“bebé ao colo” : True), estiver grávida (“gravidez” : True) ou ter mais de 75 anos de idade, é considerada uma pessoa com estatuto prioritário ("prioridade": True) 
+
 Após a atribuição destes parâmetros, os doentes são organizados na fila para a triagem com base nos mesmos pelo que, os doentes com estatuto prioritário ficam em primeiro na lista, de seguida ficam os não prioritários com consulta e, por fim, os não prioritários sem consulta. Esta organização é possível através da função chegadaAntesTriagem(doente,fila_triagem) presente no ficheiro Triagem.py:
 ```
-def chegadaAntesTriagem(doente, fila_triagem):  
+def chegadaAntesTriagem(doente, fila_triagem):
+    #Fila antes de ser atendido na receção, ou seja, à chegada à clínica
+    # doente prioritário fica atrás do último prioritário da fila 
     prioritarios=fila_triagem[0]
-    resto= fila_triagem[1]
+    resto= fila_triagem[1] #o resto são os pacientes que não são prioritários
     if doente["prioridade"] == True:
         prioritarios.append(doente)
     elif doente["consulta"] == True :
@@ -179,12 +194,17 @@ def chegadaAntesTriagem(doente, fila_triagem):
             j += 1
         resto.insert(j, doente)
     else:
-        resto.append(doente)
+        resto.append(doente) #quem não tem consulta, vai para o fim da lista de espera inteira
    
     return fila_triagem
 ```
+Nesta função, os doentes prioritários são colocados atrás do último doente prioritário já existente na fila, garantindo que pessoas com maior necessidade de atenção são atendidas primeiro. Entre os restantes, os doentes com consulta estão posicionados à frente dos que não têm consulta, mantendo a ordem relativa dos pacientes com consulta. Os doentes sem consulta são adicionados ao final da fila.
 
 A triagem em si é feita nos balcões de atendimento que estão definidos por:
+balcoes = [{balcão}]
+
+balcão = {“id”: int , “prioritario”: bool, “disponivel” : bool, “doente” : str, “entrada” : float, “saida” : float, “ndoentes_atendidos” : int, “tempo_ocupado” : float}
+
 ```
 balcoes = [
     {"id":1, "prioritario":True,  "disponivel":True, "doente":None, "entrada":None, "saida":None, "ndoentes_atendidos" : 0, "tempo_ocupado": 0.0},
@@ -192,8 +212,7 @@ balcoes = [
     {"id":3, "prioritario":False, "disponivel":True, "doente":None, "entrada":None, "saida":None, "ndoentes_atendidos" : 0, "tempo_ocupado": 0.0}
 ]
 ```
-
-Função para criar os balcões:
+Através da função criaBalcoes cada balcão regista se está disponível, o doente atendido, o tempo de entrada e saída, o número de doentes atendidos e o tempo total de ocupação.
 ```
 def criaBalcoes(config_atual):
     nbalcoes = config_atual["nbalcoes"]
@@ -225,8 +244,9 @@ def ocupar_balcaoTriagem(lista,balcoes,t_atual):
     fila_resto=lista[1]
     eventos_gerados=[]
     for balcao in balcoes:
-        if balcao["prioritario"] and balcao["disponivel"] and fila_prioritario:  
-            doente = fila_prioritario.pop(0)  
+        if balcao["prioritario"] and balcao["disponivel"] and fila_prioritario:
+        # o max vai escolher qual o tempo em que o doente ocupa o balcão: Se o balcão ficar livre depois da chegada do doente, tentrada = t_atual; se o balcão ficou livre em antes da            chegada do doente, então o tentrada=tchegada  
+                doente = fila_prioritario.pop(0)  
             entrada = max(t_atual, doente["tchegada"])  
             _, saida, t_Triagem = tempoTriagem(entrada)
 
