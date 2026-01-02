@@ -361,6 +361,360 @@ def tempo_medio_FilaTriagem(doentes_atendidos):
     return media
 ```
 
-2.3. Consultório
+2.3. Consultórios
 --
+Após os pacientes serem atendidos na receção, estes necessitam de ser encaminhados para as respetivas consultas médicas. Para tal, os pacientes são processados e inseridos nas filas de espera das consultas correspondentes à sua especialidade. Toda a lógica associada à gestão dos consultórios encontra-se implementada no ficheiro Consultórios.py, o qual importa as bibliotecas JSON e NumPy.
 
+Antes de detalhar o funcionamento deste ficheiro, torna-se fundamental analisar a base de dados de médicos da clínica. Com o objetivo de conferir maior realismo à simulação, foi criado um ficheiro JSON que contém médicos das 11 especialidades definidas, distribuídos de acordo com a frequência e relevância de cada especialidade na clínica.
+
+Na base de dados, cada médico é definido do seguinte modo:
+```
+{"nome":"Helena Santos",
+"id":"m1",
+"ocupado":false,
+"doente":null,
+"inicio_consulta":0.0,
+"fim_consulta":0.0,
+"especialidade":"Cardiologia",
+"inicio_turno":0,
+"fim_turno":430}
+```
+Através da análise desta estrutura, é possível observar que os médicos apresentam turnos distintos. Cada médico trabalha um total de 8 horas por dia, sendo que, nas especialidades com mais do que um médico, os turnos encontram-se intercalados de forma a garantir uma maior cobertura horária. Por outro lado, as especialidades que dispõem apenas de um médico funcionam exclusivamente durante um turno de 8 horas, que pode corresponder ao período inicial ou final do dia.
+
+Face a esta organização, surgiu a necessidade de desenvolver uma função responsável por carregar os médicos a partir do ficheiro JSON e inicializar os seus dados para a simulação.
+
+```
+def carregaMedicos(ficheiro):
+    medicos = []
+    with open("./tentativa2/medicos.json", "r", encoding="utf-8") as p:
+        lista_medicos = json.load(p)
+        for pessoa in lista_medicos:
+            medico = {
+                "nome": pessoa["nome"],
+                "id": pessoa["id"],
+                "disponibilidade": True,
+                "doente": None,
+                "inicio_consulta":None,
+                "fim_consulta":None,
+                "inicio_turno":pessoa["inicio_turno"],
+                "fim_turno":pessoa["fim_turno"],
+                "especialidade": pessoa["especialidade"],
+                "ndoentes_atendidos": 0,
+                "id_doentes_atendidos" : [],
+                "tempo_ocupado":0
+                }
+            medicos.append(medico)
+    return medicos
+```
+
+Esta função abre o ficheiro medicos.json e, para cada médico presente na base de dados, cria um dicionário que contém tanto informações pessoais como variáveis de estado necessárias à simulação. São inicializados os atributos relacionados com a disponibilidade do médico, as consultas realizadas e as métricas de desempenho. Por fim, todos os médicos são adicionados a uma lista, que é devolvida pela função.
+
+Uma vez que determinadas especialidades estão associadas a mais do que um médico, a clínica foi organizada em secções, sendo que cada secção corresponde a uma especialidade médica. Dentro de cada secção existem vários consultórios, e cada consultório está associado a um médico específico.
+
+```
+seccoes = [{"especialidade": "Dermatologia", "id": "s1", "consultorios":[]},
+
+            {"especialidade": "Gastroenterologia", "id": "s2", "consultorios":[]},
+                                                                            
+            {"especialidade": "Pneumonologia", "id": "s3", "consultorios":[]},
+            
+            {"especialidade": "Cardiologia", "id": "s4", "consultorios":[]},
+            
+            {"especialidade": "Endocrinologia", "id": "s5","consultorios":[]},
+                                                                        
+            {"especialidade": "Ortopedia", "id": "s6","consultorios":[]},
+            
+            {"especialidade": "Neurologia", "id": "s7","consultorios":[]},
+
+            {"especialidade": "Ginecologia e Obstetrícia", "id": "s8","consultorios":[]},
+
+            {"especialidade": "Psiquiatria", "id": "s9","consultorios":[]},
+
+            {"especialidade": "Pediatria", "id": "s10","consultorios":[]},
+
+            {"especialidade": "Medicina Geral", "id": "s11","consultorios":[]}]
+```
+
+Inicialmente, a lista de consultórios de cada secção encontra-se vazia. Assim, foi necessário desenvolver uma função responsável pela criação dos consultórios e pela associação correta entre médicos e especialidades.
+
+```
+def cria_id(medico):
+    c = medico["id"]
+    num = c[1:]
+    return num
+
+def criaConsultorios(medicos,seccoes):
+    for medico in medicos:
+        n = 0
+        while n < len(seccoes): 
+            if medico["especialidade"] == seccoes[n]["especialidade"]:
+                seccoes[n]["consultorios"].append({"id":"c" + cria_id(medico), "medico":medico})
+                n +=1
+            else: 
+                n +=1
+    return seccoes
+```
+A função criaConsultorios percorre a lista de médicos e, para cada um, identifica a secção correspondente à sua especialidade. Em seguida, é criado um consultório com um identificador próprio e este é associado ao médico em questão.
+
+Para garantir coerência entre os identificadores dos médicos e dos consultórios, foi criada a função auxiliar cria id, que extrai a parte numérica do identificador do médico (por exemplo, "m3" → "3"), permitindo que o consultório associado utilize o mesmo número identificativo.
+
+Com os consultórios criados e com os médicos carregados, restava associá-los à simulação. 
+
+Primeiramente, a função encontraDoente tem o objetivo de remover um doente da fila de espera quando este já entrou no consultório, garantindo a coerência entre o estado do doente e as filas.
+```
+def encontraDoente(doente,fila):
+    if doente != None:
+        v = 0
+        pronto = False
+        while v < len(fila) and not pronto:
+            if fila[v]["id"] == doente["id"] and doente["tentrada_consultorio"] != None:
+                fila.pop(v)
+                pronto = True
+            else:
+                v +=1
+    return fila
+```
+A função recebe como argumentos um doente e uma fila de espera. Caso o doente exista, percorre a fila com o mesmo id e verifica se o doente com o mesmo id já entrou no consultório se este já possui tempo de entrada no consultório. Quando estas condições são satisfeitas, o doente é removido da fila utilizando o método pop e é retornada a fila agora sem esse doente. 
+
+Por outro lado, a função atribuir doente a medico é responsável por atribuir um doente a um médico disponível, respeitando a especialidade médica e o horário de trabalho do médico. 
+```
+def atribuir_doente_a_medico(doente, seccoes, t_atual):
+    medicos_seccao = None
+    i = 0
+
+    while i < len(seccoes) and medicos_seccao is None:
+        sec = seccoes[i]
+        if sec["especialidade"] == doente["especialidade"]:
+            medicos_seccao = [c["medico"] for c in sec["consultorios"]]
+        i += 1
+
+    for m in medicos_seccao:
+        m["disponibilidade"] = (m["inicio_turno"] <= t_atual < m["fim_turno"]and m["doente"] is None)
+        
+    disponiveis = [m for m in medicos_seccao if m["inicio_turno"] <= t_atual < m["fim_turno"] and m["doente"] is None]
+
+    if not disponiveis:
+        return None
+
+    medico = min(disponiveis, key=lambda m: m["ndoentes_atendidos"])
+
+    tempo = None
+    i = 0
+
+    while i < len(tempo_consulta_especialidade) and tempo is None:
+        t = tempo_consulta_especialidade[i]
+        if t["especialidade"] == medico["especialidade"]:
+            tempo = max(5, np.random.normal(t["tempo_medio_consulta"], 5))
+        i += 1
+        
+    medico["doente"] = doente
+    medico["disponibilidade"] = False
+    medico["inicio_consulta"] = round(t_atual, 2)
+    medico["fim_consulta"] = round(t_atual + tempo, 2)
+    doente["tentrada_consultorio"] = medico["inicio_consulta"]
+    doente["tsaida_consultorio"] = medico["fim_consulta"]
+    medico["ndoentes_atendidos"] += 1
+    medico["id_doentes_atendidos"].append(doente["id"])
+    medico["tempo_ocupado"] = round(medico["tempo_ocupado"] + tempo,2)
+    doente["estado_final"] = "CONSULTA" #registo
+
+    return medico #encontrou um médico
+```
+
+Em primeiro lugar, a função identifica a secção correspondente à especialidade do doente e obtém a lista de médicos dessa secção. De seguida, verifica quais os médicos que se encontram disponíveis no instante atual da simulação, ou seja, cujo turno está ativo e que não se encontram a atender outro doente.
+
+Caso existam médicos disponíveis, é selecionado o médico que atendeu menos doentes até ao momento, promovendo assim uma distribuição mais equilibrada da carga de trabalho.
+
+A duração da consulta é então calculada com base na especialidade médica, recorrendo a uma distribuição normal centrada no tempo médio definido para essa especialidade, sendo garantido um tempo mínimo de consulta.
+
+```
+tempo_consulta_especialidade = [
+    {"especialidade": "Cardiologia", "tempo_medio_consulta": 30},
+    {"especialidade": "Pediatria", "tempo_medio_consulta": 20},
+    {"especialidade": "Dermatologia", "tempo_medio_consulta": 15},
+    {"especialidade": "Gastroenterologia", "tempo_medio_consulta": 25},
+    {"especialidade": "Pneumonologia", "tempo_medio_consulta": 25},
+    {"especialidade": "Endocrinologia", "tempo_medio_consulta": 20},
+    {"especialidade": "Ortopedia", "tempo_medio_consulta": 20},
+    {"especialidade": "Neurologia", "tempo_medio_consulta": 30},
+    {"especialidade": "Ginecologia e Obstetrícia", "tempo_medio_consulta": 25},
+    {"especialidade": "Psiquiatria", "tempo_medio_consulta": 45},
+    {"especialidade": "Medicina Geral", "tempo_medio_consulta": 15}
+]
+```
+Por fim, são atualizados os estados do médico e do doente, incluindo os tempos de início e fim da consulta, as estatísticas do médico e o estado final do doente. A função devolve o médico atribuído ou None caso não exista disponibilidade.
+
+À semelhança da ocupação dos médicos, torna-se necessário desócupa-los após o término da consulta e, para isso, foi desenvolvida a função desocuparMedico que garante que após a consulta o dicionário do médico é atualizado e ele consiga atender o próximo paciente. 
+
+```
+def desocuparMedico(medico,t_atual):
+    if medico != None:
+        if medico["fim_consulta"] != None:
+            if t_atual >= medico["fim_consulta"] :
+
+                doente = medico["doente"]
+                doente["estado_final"] = "ATENDIDO" #registo
+
+                medico.update({
+                "disponibilidade": True,
+                "doente": None,
+                "inicio_consulta":None,
+                "fim_consulta":None,
+                })
+
+    return medico
+```
+A função recebe um médico e o instante atual da simulação. Caso o médico se encontre em consulta e o tempo atual seja igual ou superior ao tempo de fim da consulta, considera-se que a consulta terminou.
+
+Nessa situação, o estado final do doente é atualizado para "ATENDIDO", e os atributos do médico relacionados com a consulta são reinicializados, nomeadamente a disponibilidade, o doente associado e os tempos de consulta.
+
+Apesar das funções anteriores gerirem corretamente a atribuição e libertação de médicos, estas não são responsáveis pela organização das filas de espera. Após a triagem os doentes deixam de ter prioridade com base nos critérios iniciais, sendo que quem tem consulta marcada tem prioridade sobre quem não tem consulta.POR AQUI LIGAÇÃO. 
+
+Neste contexto, surge a função tentar atribuir fila que gere as filas de espera e tenta atribuir vários doentes, respeitando prioridades. Esta função seleciona o doente a ser atendido, dando prioridade aos doentes com consulta marcada, e apenas considera os doentes sem consulta quando a fila prioritária se encontra vazia. Sempre que um doente é atribuído a um médico, este é removido da fila correspondente e é criado um evento do tipo "SAI_CONSULTORIO", que representa o momento em que a consulta termina. Este processo é repetido enquanto existirem doentes em fila e médicos disponíveis.
+
+```
+def tentar_atribuir_fila(esp, filas_consultas, seccoes, eventos, t_atual):
+    continuar = True
+
+    while continuar == True: #enquanto houverem doentes na fila
+        if filas_consultas[esp]["com_consulta"]:
+            doente = filas_consultas[esp]["com_consulta"][0]
+            origem = "com_consulta"
+
+        elif filas_consultas[esp]["sem_consulta"]:
+            doente = filas_consultas[esp]["sem_consulta"][0]
+            origem = "sem_consulta"
+
+        else: #as filas estão vazias
+            continuar = False
+
+        if continuar == True: #se não estiverem vazias
+            medico = atribuir_doente_a_medico(doente, seccoes, t_atual)
+            #procura o médico e tenta atribui-lo ao doente
+
+            if medico: #se houver médico disponível
+                filas_consultas[esp][origem].pop(0)
+                #remove o primeiro paciente que estava na fila dessa especialidade
+
+                eventos.append({
+                    "tempo": medico["fim_consulta"],
+                    "tipo": "SAI_CONSULTORIO",
+                    "doente": doente,
+                    "medico": medico
+                })
+                #atualiza o evento para SAI CONSULTÓRIO que é adicionado aos eventos da simulação
+
+                eventos.sort(key=lambda e: e["tempo"])
+                #ordena os eventos por ordem cronológica
+
+            else: #caso não exista médico disponível
+                continuar = False
+                #a função termina
+```
+
+Deste modo, esta função desempenha um papel central na simulação, garantindo que os doentes são atendidos assim que existam médicos disponíveis, atualizando corretamente as filas, aplicando critérios de prioridade e coordenando a criação de eventos temporais. Assim, assegura-se um fluxo contínuo e realista de atendimento dentro da clínica.
+
+A função atribuir doente a medico é responsável pela lógica individual de atribuição de um doente a um médico disponível, enquanto a função tentar atribuir fila atua ao nível da gestão global do sistema, selecionando doentes das filas de espera, aplicando critérios de prioridade e coordenando a criação de eventos na simulação.
+
+Apesar de a função tentar_atribuir_fila remover explicitamente os doentes das filas no momento em que estes entram em consulta, a função encontraDoente mantém-se relevante como mecanismo auxiliar de consistência, permitindo garantir que um doente não permanece indevidamente em filas de espera após ter iniciado a consulta.
+
+No restante conteúno no ficheiro relaciona-se com a obtenção de estatísticas para criação de gráficos. 
+1. Função do tamanho das filas consultas: para cada especialidade guarda o tamanho das filas com e sem consulta e calcula o total.
+   ```
+   def tamanho_filas_cosultas(filas_consultas,tam_filas):
+
+    for esp, fila in filas_consultas.items():
+
+        if esp not in tam_filas:
+            tam_filas[esp] = {
+                "sem_consulta" : [],
+                "com_consulta" : [],
+                "tam_total" : []
+            }
+            tam_filas[esp]["sem_consulta"] = [len(fila["sem_consulta"])]
+            tam_filas[esp]["com_consulta"] = [len(fila["com_consulta"])]
+            tam_filas[esp]["tam_total"] = [len(fila["sem_consulta"]) + len(fila["com_consulta"])]
+        
+        else:
+            tam_filas[esp]["sem_consulta"]= tam_filas[esp]["sem_consulta"] + [len(fila["sem_consulta"])]
+            tam_filas[esp]["com_consulta"] = tam_filas[esp]["com_consulta"] + [len(fila["com_consulta"])]
+            tam_filas[esp]["tam_total"] = tam_filas[esp]["tam_total"] + [len(fila["sem_consulta"]) + len(fila["com_consulta"])]
+
+    return tam_filas
+   ```
+2. Função do tamanho total das filas consultas: soma o número total de doentes em todas as especialidades.
+   ```
+   def tamanho_total_filasconsultas(filas_consultas,tam_filas,tam_filas_total):
+    soma = 0
+    
+    for esp,tams in tam_filas.items():
+        soma += tam_filas[esp]["tam_total"][-1]
+
+    tam_filas_total.append(soma)
+        
+    return tam_filas_total
+   ```
+3. Função da média do tamanho das filas consultas: calcula médias das filas com e sem consulta e uma média global por especialidade. Trata de casos em que não há dados.
+   ```
+   def media_tamanho_filas_consultas(tam_filas):
+
+    med_filas = {}
+
+    def calcula_media(fila):
+        media = None
+        if len(fila) != 0:
+            media = sum(fila)/len(fila)
+        return media
+
+    for esp, fila in tam_filas.items():
+
+        med_filas[esp] = {
+            "media_sem_consulta": calcula_media(fila.get("sem_consulta", [])),
+            "media_com_consulta": calcula_media(fila.get("com_consulta", [])),}
+        if med_filas[esp]["media_com_consulta"] == None and med_filas[esp]["media_sem_consulta"] == None:
+            med_filas[esp]["media_da_especialidade"] = None
+        elif med_filas[esp]["media_com_consulta"] == None:
+            med_filas[esp]["media_da_especialidade"] = med_filas[esp]["media_sem_consulta"]
+        elif med_filas[esp]["media_sem_consulta"] == None:
+            med_filas[esp]["media_da_especialidade"] = med_filas[esp]["media_com_consulta"]
+        else:
+            med_filas[esp]["media_da_especialidade"] = (med_filas[esp]["media_sem_consulta"] + med_filas[esp]["media_com_consulta"])/2
+
+    return med_filas
+   ```
+4. Função da média global do tamanho das filas na clínica: junta as médias válidas de todas as especialidades e calcula a média final.
+   ```
+   def med_filas_consultas(med_filas):
+    
+    lista_soma = []
+
+    for _,media in med_filas.items():
+
+        if media["media_da_especialidade"] != None:
+            lista_soma.append(media["media_da_especialidade"])
+    
+    media_final = None
+
+    if lista_soma != []:
+        media_final = sum(lista_soma)/len(lista_soma)
+    
+    return media_final
+    ```
+5. Função do tempo médio de espera entre a triagem e a entrada no consultório: para cada doente atentido calcula a diferença entre a entrada no consultório e a saída da triagem. Calcula a média dessas diferenças.
+   ```
+   def tempo_medio_FilasConsultas(doentes_atendidos):
+
+    diferenca = []
+    for doente in doentes_atendidos:
+        if doente["tentrada_consultorio"] != None:
+            diferenca.append((doente["tentrada_consultorio"] - doente["tsaida_triagem"]))
+
+    media = round( sum(diferenca)/len(diferenca),2)
+
+    return media
+   ```
+   
+
+
+
+   
