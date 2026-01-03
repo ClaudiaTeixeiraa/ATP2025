@@ -11,27 +11,32 @@
 ---
 
 ## 1. Introdução ao trabalho
+##1.1. Contexto
 
 As estimativas dos tempos e tamanhos das filas de espera de estabelecimentos de saúde é um dos temas e preocupações principais quando o tema é eficácia de gestão de recursos. Um programa de simulação de chegadas de pacientes a uma clínica é um exemplo de uma forma de tentar perceber quais estratégias podem agilizar o atendimento de pacientes, garantindo a divisão de tarefas equitativas entre órgãos diferentes da clínica.
 
+##2.2. Objetivos
 
 Ao elaborar uma simulação deste género, é esperado obter resultados relativos a:
 1. Intervalos de tempo de:
-1.1 filas de espera;
-1.2 atendimento;
-1.3 ocupação de recursos.
-2. Tamanhos de filas de espera;
-3. Taxas de:
-3.1 número de pacientes atendidos;
-3.2 número de pacientes por atender;
-3.3 ocupação de recursos em função do número de pacientes chegados à clínica.
-Com o tratamento destes dados, podemos inferir a eficácia e a exigência dos vários re-
-cursos em função de vários parâmetros, como número de chegadas de pacientes, quantidade
-de recursos em serviço e tempo.
-O objetivo da elaboração deste projeto, no âmbito da unidade curricular de Algoritmos
-e Técnicas de Programação, é implementar uma simulação de eventos discretos que
-modela o funcionamento de uma clínica de saúde, permitindo avaliar o impacto de diferentes
-parâmetros no desempenho do sistema.
+
+    1.1 filas de espera;
+   
+    1.2 atendimento;
+   
+    1.3 ocupação de recursos.
+   
+3. Tamanhos de filas de espera;
+   
+4. Taxas de:
+    3.1 número de pacientes atendidos;
+   
+    3.2 número de pacientes por atender;
+   
+    3.3 ocupação de recursos em função do número de pacientes chegados à clínica.
+   
+Com o tratamento destes dados, podemos inferir a eficácia e a exigência dos vários recursos em função de vários parâmetros, como número de chegadas de pacientes, quantidade de recursos em serviço e tempo.
+O objetivo da elaboração deste projeto, no âmbito da unidade curricular de Algoritmos e Técnicas de Programação, é implementar uma simulação de eventos discretos que modela o funcionamento de uma clínica de saúde, permitindo avaliar o impacto de diferentes parâmetros no desempenho do sistema.
 
 Aquando da disponibilização do guião do projeto, foi possível reconhecer de imediato a sua dimensão e complexidade face ao nível de conhecimentos de programação até então adquiridos. Ainda assim, a ambição de desenvolver um projeto bem estruturado e o desafio associado ao desconhecido motivaram o início do trabalho.  
 
