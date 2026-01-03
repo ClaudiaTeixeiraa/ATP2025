@@ -2,11 +2,73 @@
 # Simulação de uma Clínica
 
 ## Índice
-- Introdução ao trabalho (ideias, expectativas)
-- Desenvolvimento/Execução de código
-- Criação da interface
-- Criação de gráficos a partir da simulação na interface
-- Conclusões finais
+
+## 1. Introdução
+### 1.1 Contexto
+
+### 1.2 Objetivo
+Descrição dos objetivos do projeto.
+
+### 1.3 Processo criativo inicial
+Explicação sobre o processo criativo inicial.
+
+## 2. Funcionamento do Sistema
+### 2.1 Enquadramento básico
+Explicação sobre o enquadramento básico do sistema.
+
+## 3. Ficheiros Base
+### 3.1 Chegadas.py
+Detalhes sobre o ficheiro `Chegadas.py`.
+
+### 3.2 Triagem.py
+Detalhes sobre o ficheiro `Triagem.py`.
+
+### 3.3 Consultorios.py
+Detalhes sobre o ficheiro `Consultorios.py`.
+
+## 4. Simulação de Eventos
+### 4.1 Lógica de tempos e eventos
+Explicação da lógica de tempos e eventos da simulação.
+
+### 4.2 Evento de Chegada
+Descrição do evento de chegada.
+
+### 4.3 Evento de Saída da Triagem
+Descrição do evento de saída da triagem.
+
+### 4.4 Evento de Saída do Consultório
+Descrição do evento de saída do consultório.
+
+### 4.5 Resultados e Obtenção de Dados
+Explicação de como os resultados são obtidos e os dados gerados.
+
+## 5. Interface e Modelo Visual
+### 5.1 Menu
+Descrição do menu da interface.
+
+### 5.2 Ajuda
+Informações sobre a seção de ajuda.
+
+### 5.3 Configurações
+Detalhes sobre a seção de configurações.
+
+### 5.4 Iniciar Simulação
+Passos para iniciar a simulação.
+
+#### 5.4.1 Balcões
+Informações sobre os balcões da simulação.
+
+#### 5.4.2 Cadeiras
+Informações sobre as cadeiras da simulação.
+
+#### 5.4.3 Consultórios
+Informações sobre os consultórios da simulação.
+
+### 5.5 Botões de tempo de espera
+Detalhes sobre os botões de tempo de espera.
+
+#### 5.5.1 Tempo
+Explicação sobre a funcionalidade do tempo.
 
 ---
 
@@ -965,15 +1027,337 @@ A janela de configurações permite alterar os parãmetros da simulação. Os pa
 Também existe um botão salvar e um botão cancelar. O botão salvar define os novos parâmetros da simulação caso estes sejam válidos. Casos em que os parâmetros não podem ser salvos são:
 - O número de balcões prioritários é igual ou maior do que o número de balcões totais; evitando que o número de balcões prioritários seja coerente e que ainda hajam balcões não prioritários;
 - O modo de taxas selecionado não exista; em princípio, este erro não deve de ocorrer, pois a seleção dos parãmetros apenas podem ser selecionados e não personalizados.
+
+Se os parâmetros forem inválidos, aparece uma janela de erro, a indicar a razão do erro. Adicionalmente, os parâmetros são restaurados para os parãmetros Default.
+
+Também a funcionalidade "finalize" está ativa. O objetivo desta funcionalidade é impedir alterar valores e informações desta janela assim que esta janela seja finalizada.
+
+Para criar a janela de Configurações, foram utilizados novas funcionalidades. Para além das funcionalidades Button e Text, que criam, respetivamente, botões e caixas de texto, também foram utilizadas as funcionalidades Spin e Combo.
+
+- A funcionalidade Spin cria uma seleção no estilo de seleção com setas, podendo aumentar ou diminuir uma unidade. Esta funcionalidade é utilizada para definir o número de balcões. A funcionalidade "readonly" está ativada, o que faz com que o usuário não consiga editar manualmente os valores.7
+- A funcionalidade Combo permite a seleção a partir de uma lista. Esta funcionalidade é utilizada para definir o modo taxas. 
   
+Na modelação do evento loop, existem validações e alteração de valores quando existe interação com os botões. Para isso, a função que gera a janela de configurações recebe dois parãmetros:
 
+- Configuração atual- comtém todas as definções atuais dos parâmetros alteráveis na simulação (no início da simulação, os valores dos parãmetro são os valores Default). A configuração Default está dfinida num ficheiro à parte para impedir que a sua informação seja mais fácil de exportar para outros ficeiros e que não seja alterada. Tem a estrutura de um dicionário
+- Modos de taxas- contém a definição dos diferentes modos alteráveis das taxas. Para obter os diferentes valores, os valores Default são multiplicados por um número inteiro. Por exemplo, os valores do modo Cheio obtêm-se multiplicando os valores Default por 5. Os valores das taxas são variáveis ao longo do dia, independentemente do modo das taxas, e os intervalos de variação de taxas são iguais em todos os modos. Tem a estrutura de um dicionário.
 
+Para a validação número de balcões prioritários, foi usada a condição "nbalcoes <= nbalcoes prior". Caso se verifique esta condição, é uitilizada a funcionalidade popup error com a mensagem de invalidação. A condição é seguida pela função continue. "Continue" faz com o cumprimento da condição na qual está identada faça com que o restante código da função não seja executado. Assim, impede a execução do código seguinte à condição, a alteração do dicionário da Configuração Atual com os valores selecionados.
 
+```
+if event =="-SAVE-":
+        nbalcoes = int(values["-BTOTAL-"])
+        nbalcoes_prior = int(values["-BPRIOR-"])
+        modo = values["-MODO-"]
 
+        STOP = True
+            
 
+        if nbalcoes <= nbalcoes_prior:
+            sg.popup_error("O número de balcões prioritários 
+            não pode ser maior que o número total de balcões.")
+            continue 
+            # continue faz com que quando entra uma condição no loop,
+            ignora o restante código e inicia um novo loop
 
+        config_atual["nbalcoes"] = nbalcoes
+        config_atual["nbalcoes_prior"] = nbalcoes_prior
+        config_atual["modo"] = modo
+```
 
+Já a validação da seleção do modo é controlado por uma lista que contém todos os modos disponíveis. Caso o modo selecionado não esteja nessa lista, abre-se uma janela de popup error com a mensagem de invalidação. Também aqui se utiliza "continue".
 
+```
+if modo not in modos_taxas:
+            sg.popup_error(f"Modo inválido selecionado: {modo}")
+            continue
+
+        config_atual["taxas"] = modos_taxas[modo]
+
+        sg.popup("Configurações guardadas com sucesso!"
+        , title="Sucesso")
+```
+
+# 5.2. Iniciar simulação
+
+Após a atualização das configurações no menu e a a execução do botão de início de simulação, o utilizador é apresentado a uma janela que já inicia a simulação.
+
+Esta estrutura é obtida devido À interface desenvolvida num ficheiro entitulado "teste de interface". Esse ficheiro Python é responsável pela gestão da interface gráfica e pelo controlo da execução da simulação da clínica. Não contém a lógica principal da simulação, mas atua como camada de visualização, interação e monitorização dos estados internos do sistema, funcionando como uma camada intermédia entre o modelo e o utilizador final.
+
+Também para a construção da interface gráfica da simulação foi utilizada a biblioteca FreeSimpleGUI, que permite criar aplicações gráficas de forma simples e modular.
+
+```
+import FreeSimpleGUI as sg
+import time
+import App2
+import Triagem
+import Consultorios as con
+import Graficos as gr
+```
+
+Logo no início do ficheiro são definidas cores e fontes utilizadas em toda a aplicação. Esta abordagem permite garantir consistência visual e facilita a identificação do estado dos diferentes elementos do sistema.
+
+```
+PRIMARY = "#429c91"
+OCUPADO = "#d15050"
+LIVRE = PRIMARY
+CADEIRA_LIVRE = "#9aa3ad"
+CADEIRA_OCUPADA = "red"
+```
+
+ As cores são utilizadas, por exemplo, para distinguir elementos livres, ocupados ou indisponíveis, tornando a simulação mais intuitiva para o utilizador.
+
+ # 5.2.1. Balcões
+
+ A função principal do módulo é simulacao principal, que recebe a configuração atual da simulação e inicializa os elementos gráficos e lógicos necessários.
+
+ ```
+def simulacao_principal(config_atual):
+    balcoes = Triagem.criaBalcoes(config_atual)
+```
+
+Nesta fase, os balcões de triagem são criados com base nos parâmetros definidos na configuração inicial, no menu, assegurando a coerência entre o modelo e a interface.
+Para permitir a interacção entre os botões da interface gráfica e as estruturas de dados internas, é criado um mapa de correspondência entre os balcões e as respetivas keys gráficas.
+
+```
+def define_Mapa_Balcoes(balcoes):
+    MAPA_BALCOES = {}
+    ...
+    MAPA_BALCOES[key] = ind
+```
+Este mapeamento permite identificar corretamente qual o balcão selecionado quando ocorre um evento de clique, garantindo uma ligação direta entre a interface e o estado da simulação.
+
+A interface gráfica é organizada em diferentes áreas funcionais. Os balcões de triagem são criados dinamicamente, distinguindo balcões prioritários de não prioritários.
+
+ ```
+def criaFrame_balcoes(balcoes, MAPA_BALCOES):
+    lista_botoes.append(
+        sg.Button("Balcão", key=key, button_color=("white", PRIMARY))
+    )
+```
+Cada balcão é representado por um botão cuja cor é atualizada em tempo real, refletindo se o balcão se encontra livre ou ocupado.
+
+A atualização em tempo real da cor dos balcões é realizada dentro do ciclo principal da simulação, sempre que o estado do sistema é avançado.
+
+```
+# ----------------------------
+# ATUALIZAR BALCÕES (CORES)
+# ----------------------------
+for key, idx in MAPA_BALCOES.items():
+    balc = balcoes[idx]
+    cor = LIVRE if balc["disponivel"] else OCUPADO
+    window[key].update(button_color=("white", cor))
+```
+
+MAPA BALCOES estabelece a correspondência entre cada botão da interface gráfica e o balcão respetivo no modelo. O campo balc["disponivel"] indica se o balcão se encontra livre ou ocupado. Consoante esse estado, é selecionada a cor apropriada (LIVRE ou OCUPADO), inicialmente definida. O método update altera dinamicamente a cor do botão durante a execução da simulação.
+
+Devido a esta configuração, o utilizador consegue rapidamente perceber se o balcão está a ser ocupado ou não em tempo "real" de simulação. 
+
+# 5.2.1 Cadeiras
+A sala de espera é representada graficamente através de cadeiras, cujo número ocupado varia consoante o tamanho da fila de triagem.
+
+```
+def cadeiras(linhas=4, colunas=6):
+    cadeira = sg.Text(
+        "", background_color=CADEIRA_LIVRE
+    )
+...
+```
+À medida que o número de doentes em espera aumenta, as cadeiras passam do estado livre para ocupado, permitindo uma visualização imediata da pressão sobre o sistema. No ficheiro, o bloco de código que altera a cor das cadeiras da sala de espera encontra-se dentro do ciclo principal da simulação, depois de calcular o número de doentes em espera:
+
+```
+# ----------------------------
+# ATUALIZAR SALA DE ESPERA
+# ----------------------------
+n_espera = len(fila_triagem[0]) + len(fila_triagem[1])
+
+for i, cadeira in enumerate(CADEIRAS):
+    if i < n_espera:
+        cadeira.update(background_color=OCUPADO)
+    else:
+        cadeira.update(background_color=CADEIRA_LIVRE)
+```
+
+Cada cadeira muda de cor de acordo com a sua ocupação: se há um doente na posição correspondente, fica vermelha (OCUPADO), caso contrário mantém-se cinzenta (CADEIRA LIVRE). Este mecanismo permite visualizar em tempo real a ocupação da sala de espera durante a simulação.
+
+# 5.2.3. Consultórios
+
+Os consultórios são representados na interface gráfica por botões que indicam o estado de cada especialidade e do respetivo médico. Tal como acontece com os balcões e a sala de espera, a cor dos botões muda dinamicamente para refletir a disponibilidade.
+
+O estado de cada consultório depende de 2 fatores principais:
+- Turno do médico: se o médico está em serviço ou não
+- Ocupação do médico: se o médico está ocupado ou não
+  
+Esses parâmetros são analisados pelas seguintes funções:
+
+```
+def medico_em_turno(med, t_atual):
+    inicio = med.get("inicio_turno", 0)
+    fim = med.get("fim_turno", 720)
+    return inicio <= t_atual < fim
+
+def em_consulta(med, t_atual):
+    return medico_em_turno(med, t_atual) and med.get("doente") is not None
+```
+
+Com base neste estado, a cor do botão é definida:
+
+```
+    def cor_consultorio(med, t_atual):
+    if em_consulta(med, t_atual):
+        return OCUPADO
+    elif not medico_em_turno(med, t_atual):
+        return "#9aa3ad"  # fora de turno
+    else:
+```
+Dentro do ciclo principal da simulação, todos os consultórios são percorridos e o botão correspondente na interface é atualizado com a cor adequada:
+
+```
+for sec_id, lista_consultorios in MAPA_CONSULTORIOS.items():
+    todos_em_consulta = all(em_consulta(cons["medico"], t_atual) for cons in lista_consultorios)
+    cor = OCUPADO if todos_em_consulta else LIVRE
+    key = f"-CONS-{sec_id}-"
+    if key in window.AllKeysDict:
+        window[key].update(button_color=("white", cor))
+```
+
+Quando o utilizador clica num consultório, surge uma janela popup com informações detalhadas sobre os médicos e doentes naquele consultório.
+
+Cada atualização dos consultórios depende do tempo da simulação (t atual). A cor dos botões é alterada de acordo com o estado do médico e do consultório de maneira instantânea em que se todos os consultórios da especialidade estiverem ocupados, a unidade fica a vermelho. Dentro de cada unidade, se o médico de cada consultório estiver ocupado, o consultório aparece a vermelho e se estiver fora de turno, aparece a cinzento até que o t atual coincida com o inicio de turno do mesmo.  
+
+# 5.2.4. Botões de tempo médio de espera
+
+Na interface, existem dois botões específicos que permitem ao utilizador obter informação estatística instantânea sobre as filas:
+- Tempo médio de fila de triagem ("-TWAIT-")
+
+  Quando clicado, a simulação é temporariamente pausada para que o utilizador possa visualizar a informação sem que o estado da simulação avance.
+
+    O cálculo é feito através da função Triagem.tempo medio FilaTriagem, que percorre os doentes atendidos até ao momento e calcula o tempo médio em minutos:
+```
+if event == "-TWAIT-":
+    simulacao_pausada = True
+    tempo_medio = Triagem.tempo_medio_FilaTriagem(doentes_atendidos)
+    sg.popup(f"Tempo médio de espera na fila para a triagem: {tempo_medio:.2f} minutos")
+    simulacao_pausada = False
+```
+- Tempo médio de fila para a consulta ("-CWAIT-")
+
+    Funciona de forma idêntica ao TWAIT, pausando a simulação, calculando o tempo médio e mostrando-o num popup:
+```
+if event == "-CWAIT-":
+    simulacao_pausada = True
+    tempo_medio = con.tempo_medio_FilasConsultas(doentes_atendidos)
+    sg.popup(f"Tempo médio de espera na fila para a consulta: {tempo_medio:.2f} minutos")
+    simulacao_pausada = False
+```
+
+Se o utilizador interagir com os botões em diferentes fases da simulação, o resultado para cada um vai variar visto que digere informações em "tempo real".
+
+# 5.2.5. Tempo
+
+ Relativamente ao tempo de simulação, a interface consegue controlar o tempo através de um relógio que avança a cada iteração da simulação. A gestão do mesmo é um dos elementos centrais do funcionamento do sistema. O tempo não avança de forma continua, mas sim de forma discreta, controlada por um gerador, permitindo sincronizar a evolução do modelo com a interface gráfica.
+
+O tempo da simulação é representado por uma variável inteira (t atual), que corresponde ao número de minutos decorridos desde o início da simulação. O valor inicial corresponde ao horário de abertura da clínica.
+
+A cada iteração do gerador da simulação, este valor é incrementado e devolvido à interface:
+````
+t_atual, fila_triagem, ..., seccoes, doentes_atendidos = next(simulador)
+````
+
+Desta forma, t atual funciona como o relógio interno de toda a simulação, sendo utilizado por vários módulos para tomar decisões.
+
+Embora internamente o tempo seja tratado em minutos, é necessário apresentá-lo ao utilizador de forma compreensível. Para esse efeito, é utilizada a função formatar tempo, que converte o número de minutos desde o início da simulação para o formato horas:minutos.
+
+````
+def formatar_tempo(minutos_desde_inicio, hora_inicio=9, minuto_inicio=0):
+    total_minutos = hora_inicio * 60 + minuto_inicio + minutos_desde_inicio
+    h = int(total_minutos // 60)
+    m = int(total_minutos % 60)
+    return f"{h:02d}:{m:02d}"
+````
+
+Este valor é depois apresentado na interface gráfica e atualizado a cada iteração:
+
+````
+window["-TEMPO-"].update(f"Relógio: {formatar_tempo(t_atual)}")
+````
+
+O avanço do tempo ocorre dentro do ciclo de eventos da interface gráfica. Sempre que o botão que pausa a simulação é clicado, a simulação é interrompida:
+
+````
+if event == "-PAUSA-":
+    simulacao_pausada = not simulacao_pausada
+````
+
+Quando pausada a simulação, o gerador não avança, o tempo interno (t atual) mantém-se parado e a interface continua responsiva, permitindo a interação com o utilizador e a consulta de informação.
+
+Porém, quando não se encontra em pausa, é efetuada uma chamada ao gerador:
+
+````
+if not simulacao_pausada:
+    t_atual, fila_triagem, filas_consultas, ... = next(simulador)
+````
+
+Cada chamada a next(simulador) corresponde a um avanço temporal da simulação, tipicamente um minuto.Esta unidade temporal é definida pela forma como o tempo é utilizado e interpretado ao longo do modelo, nomeadamente na conversão para horas:minutos, na definição dos turnos dos médicos e no cálculo das métricas de desempenho, todas expressas em minutos. Este mecanismo garante que o tempo só avança quando a interface está pronta a processar o novo estado. 
+
+No App2.simulação(config atual) cada yield devolve o estado de simulação num determinado instante e o estado interno do gerador fica suspenso até à proxima chamada a next(). Por outras palavras, invocar o next() é como dizer ao App2.simulação() para se executar mais uma vez até ao yield e retornar os estados de tempo e disponibilidade no novo instante. 
+
+Para além de ser possível pausar e despausar a simulação, é também possível interagir com um botão que acelera a simulação até ao fim. Deste modo, a pessoa consegue terminar a simulação instantaneamente e aceder aos gráficos gerados com os dados obtidos ao longo da mesma. 
+````
+if event == "-FAST-":
+    simulacao_pausada = True
+    try:
+        while True:
+            t_atual, fila_triagem,..., seccoes, doentes_atendidos = next(simulador)
+    except StopIteration as e:
+        resultados_finais = e.value
+        sg.popup("Simulação Concluída")
+        gr.mostrar_graficos_finais(resultados_finais)
+        break 
+````
+
+# 6. Resultados e representações gráficas
+
+A representação gráfica dos resultados ajuda bastante na compreensão dos dados e métricas registados pois é possível interpretar facilmente o funcionamento da clínica.
+
+No programa, os gráficos surgem no final da simulação, assim que todos os dados e métricas estejam completas. Desta forma, conseguimos fazer uma análise completa da evolução das condições ao longo do tempo.
+
+Os gráficos fundamentais para uma análise e compreensão básica do que ocorre durante a simulação são:
+- Evolução do tamanho das filas de espera em função do tempo;
+- Evolução da taxa de ocupação dos médicos em função do tempo;
+- Gráfico da evolução do tamanho das filas de espera em função do tempo
+
+Com esta informação, é possível retirar conclusões relativas ao comportamento e reação dos recursos disponíveis ao stress submetido e à quantidade de pessoas que chegam à clínica.
+
+# 6.1. Tamanho das Filas VS Tempo
+    
+Este gráfico, em particular, pode ajudar a perceber em que ponto do dia os diferentes órgãos da clínica ficam sobrecarregados e não conseguem vencer a chegada de doentes à clínica. Assim que uma fila de espera cresce de forma significativa e de forma incomum, significa que os recuros estão sobrelotados. A partir daqui, muitas outras métricas tendem a crescer bastante; métricas como taxas de ocupação, tempos médio de espera e o número de doentes atendidos.
+
+De seguida, está um exemplo de um possível gráfico, com as configurações Default (5 balcões, dos quais 2 são prioritários e modos de chegada Default) que representa a evolução do tamanho das filas de espera para a triagem e para as consultas:
+
+    \begin{center}
+        \includegraphics[scale=0.42]{./Imagens/TAMVSTIME.png}
+    \end{center}
+
+Pelo que é possível observar no gráfico, a evolução do tamanho da fila de triagem não mostra grande preocupações quanto à sobrelotação dos balcões, o que significa que para uma afluência de cerca de 330 pacientes, os balcões conseguem atender facilemente todos os pacientes.
+
+Já a fila de espera para as consultas atinge picos significativos durnate o dia. Ainda na primeira hora de funcionamento, o tamnho das filas atinge um pico local, seguido por um crescimento exponencial até à terceira hora de funcionamento. Isto ocorre graças à grande afluência de pacientes que chega nas 2 horas iniciais de simulação, e apesar da quantidade de pessoas chegadas à clínica diminuam a partir da segunda hora, a sobrelotação dos médicos faz com que as filas tenham um acúmulo de pesssoas e atinjam grande valores de tamanho. Apenas a partir da quarta hora de simulação é que a equipa de médicos consegue atender grande parte das pessoas, pois taxa de chegada de pessoas é bem menor. Entre a quinta hora de funcionamento e a décima, a clínica tem um período mais calmo, em que os valores do tamanho da fila parecem flutuar à volta das 13 pessoas. Pelos valores serem aproximadamente estáveis, os médicos devem conseguir atender a quantidade de pessoas que chega durante esse período, mas pelo valor médio ser de cerca de 13 pessoas, muito provavelmente, a grande afluência de horas anteriores faz com que haja um acúmulo na fila. Assim cocnclui-se que neste período os médicos satisfazem o número de chegada de doentes, mas não o acúmulo e o grande número de pessoas que chegou durante horas anteriores. Finalmente, no fim do dia há outro grande pico e as filas crescem esxponencialmente mais uma vez e ajuda a comprovar que no período que antecede este, os médicos já estavam com uma ocupação quase máxima.
+
+# 6.2. Ocupação dos Médicos VS Tempo
+
+A ocupação dos médicos revela a resposta dos consultórios e da equipa de médicos ao stress de chegadas de pessoas. Se os médicos estiverem a uma taxa próxima ao máximo, significa que os consultórios estão sobrelotados e é esperado um aumento no tamanho de fila para as conultas.
+
+De seguida está um exemplo de um gráfico que mostra a evolução da taxa de ocupação dos médicos em função do tempo.
+
+    \begin{center}
+        \includegraphics[scale = 0.5]{./Imagens/OCUPVSTEMPO.png}
+    \end{center}
+
+Para perceber melhor este gráfico, é preciso conhecer os turnos dos médicos. No total são 23 médicos que trabalham durante 8 horas. Para facilitar a compreesnsão de resultados e a simulação em si, os turnos foram simplificados: cerca de metade dos médicos trabalham as primeiro 8 horas e a outra metade as últimas 8 horas. Isto faz com que haja uma sobreposição de turnos nas 4 horas a metade do dia, ou seja, a partir da quarta hora de funcionamento até à oitava hora todos os médicos estão em funções. 
+
+Podemos verificar que na maioria do dia, as taxas de ocupação rondam os 50 por cento. No entanto, este valor tem significados diferentes ao longo do dia. Nas primeiras 4 horas de funcionamento, 50 por cento da taxa de ocupação significa que a quase a totalidade dos médicos em funções está ocupada, já que apenas cerca de metade estão no turno. O mesmo raciocínio aplica-se a partir da oitava hora de funcionamento. Por volta da quinta hora de funcioanamento, existe um grande decréscimo na ocupação dos médicos, provavelente porque não só a taxa de chegada de pessoas é relativamente baixa, mas porque como existe um maior número de médicos em funções, houve um maior número de doentes atnedidos entra a quarta e a quinta horas, diminundo as pessoas na fila de espera. Também há um grande decréscimo a partir da oitava hora, que é a hora em que uma metade dos médicos terminam funções. A partir desta hora, doentes que sejam relativos a especialidades que terminam a essa hora já não dão entrada na clínica, e os pacientes que estavam a ser atendidos por esse grupos de médicos acabam a respetiva consulta e acabam por desocupar o médico. Isto faz com que a taxa de ocupação atinja valores mínimos.
+
+    
 
 
 
