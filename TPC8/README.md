@@ -116,7 +116,7 @@ Os tempos entre chegadas são gerados segundo uma distribuição exponencial, cu
 
 Optou-se por não utilizar a função de pré-geração dos tempos de chegada, pois concluiu-se que a geração das chegadas em tempo real durante a simulação assegura um comportamento mais consistente do sistema, impedindo esperas artificiais e permitindo uma integração mais natural com a evolução temporal da simulação e a interface. Assim sendo, as chegadas são geradas ao longo da própria simulação e a função anteriormente mencionada foi descartada.
 
-LUCAS EXPLICA AS CHEGADAS PORQUE AGORA COM AS CONFIG_ATUAL NÃO SEI ESPECIFICAMENTE ONDE ESTÃO DEFINIDAS AS TAXAS; FALAR DA FUNÇÃO CHEGADA_VALIDA EM CHEGADAS.PY
+O método de geração de chegadas utilizado no programa é tratado durante a simulação, que será abordado numa secção mais à frente.
 
 2.2. Triagem
 --
@@ -916,6 +916,66 @@ Esta função calcula qual é o próximo médico a desocupar. Isto permite dimin
 "medico": medico
 }
 ```
+O evento começa por desocupar o médico, atualiza o seu dicionário e deixa-o disponível para atender o próximo paciente. De seguida, tenta ocupar novamente o consultório com tentativas falhadas anteriores com a função "tenta atribuir fila". Daqui, é determinado qual o próximo médico que será desocupado e devolve o médico, com o auxílio da função "atribuir doente a medico"
+
+## 4.5. Resultados e obtenção de resultados
+
+No fim, a simulação retorna dados de duas formas:
+- return
+- yield
+
+O return devolve os dados assim que toda a informação é tratada e bem definida; retornando informação essencial para a construção de gráficos e o cálculo de métricas de desempenho.
+
+ O yield é uma função nova que não abordamos nas aulas, mas que decidimos utilizar porque, como poderemos ver a seguir na secção   \ref{sec:Interface}, o yield será fundamental para que seja mais fácil gerar uma interface animada e dinâmica. Basicamente, a maior diferença do yield em relação ao return é que torna a simulação uma função geradora, que retorna as informações de forma gradual, e que de certa forma, diminui a sobrecarga sobre o sistema.
+
+# 5. Interface e modelo visual 
+
+A interface do programa é a peça que permite que o programa seja utilizado de forma mais simples e que qualquer pessoa consiga usar o programa de forma intuitiva. Para além disso, permite adicionar elementos visuais que permitem que a informação seja passadade forma mais intuitiva e clara.
+
+Toda a interface foi criada com o auxílio da biblioteca FreeSimpleGUI
+
+# 5.1. Menu
+
+O menu da interface é a primeira janela que aparece assim que se inicia o programa. A partir daqui é possível aceder a todas as funcionalidades do program:
+- Configurações- permitem alterar alguns parâmetros da simulação;
+- Iniciar Simulação- permite executar a simulação propriamente dita;
+- Ajuda- abre uma janela que explica brevemente a lógica e funcionamento do programa;
+- Sair- fecha a janela do menu e encerra o programa.
+
+Na verdade, o item menu é a última parte da interface a ficar concluída, já que é necessário que todas as outras funcionalidades estejam prevamente prontas para poderem ser adicionadas e vinculadas às funcionalidades dos botões.
+
+# 5.1.1. Ajuda
+
+A interface da janela Ajuda mostra um texto que dá um pequeno contexto da trajetório e do fluxo dos doentes da clínica, como é que os diferentes recursos funcionam e alguns dos parâmetros que são registados e que são alteráveis. Adicionalmente, dá instruções e esclarecimentos das funcionalidades e informações das restantes janelas da interface.
+
+Também a janela de Ajuda é bastante simples. A janela continua aberta até que o botão de voltar ao menu seja premido, que desencadeia o fecho da janela, e o Menu é interagível novamente. A funcionalidade "modal" está definida com esta janela, a qual permite que a janela de Menu continue aberta em simultâneo com a janela de Ajuda, mas não é possível interagir com ela.
+
+# 5.1.2. Configurações
+
+A janela de configurações permite alterar os parãmetros da simulação. Os parâmetros alteráveis são:
+- Número total de balcões- é possível variar de 2 a 10;
+- Número de balcões prioritários- é possível variar de 1 a 9;
+- Modo de taxa de chegadas- pode ser (variam por períodos do dia e estam ordenadas de menores para maiores taxas):
+    - [1.1] Calmíssimo;
+    - [1.2] Calmo;
+    - [1.3] Default;
+    - [1.4] Cheio;
+    - [1.5] Cheíssimo.
+
+Também existe um botão salvar e um botão cancelar. O botão salvar define os novos parâmetros da simulação caso estes sejam válidos. Casos em que os parâmetros não podem ser salvos são:
+- O número de balcões prioritários é igual ou maior do que o número de balcões totais; evitando que o número de balcões prioritários seja coerente e que ainda hajam balcões não prioritários;
+- O modo de taxas selecionado não exista; em princípio, este erro não deve de ocorrer, pois a seleção dos parãmetros apenas podem ser selecionados e não personalizados.
+  
+
+
+
+
+
+
+
+
+
+
 
 
 
