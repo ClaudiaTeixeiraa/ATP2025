@@ -7,69 +7,55 @@
 ### 1.1 Contexto
 
 ### 1.2 Objetivo
-Descrição dos objetivos do projeto.
 
 ### 1.3 Processo criativo inicial
-Explicação sobre o processo criativo inicial.
 
 ## 2. Funcionamento do Sistema
 ### 2.1 Enquadramento básico
-Explicação sobre o enquadramento básico do sistema.
 
 ## 3. Ficheiros Base
 ### 3.1 Chegadas.py
-Detalhes sobre o ficheiro `Chegadas.py`.
 
 ### 3.2 Triagem.py
-Detalhes sobre o ficheiro `Triagem.py`.
 
 ### 3.3 Consultorios.py
-Detalhes sobre o ficheiro `Consultorios.py`.
 
 ## 4. Simulação de Eventos
 ### 4.1 Lógica de tempos e eventos
-Explicação da lógica de tempos e eventos da simulação.
 
 ### 4.2 Evento de Chegada
-Descrição do evento de chegada.
 
 ### 4.3 Evento de Saída da Triagem
-Descrição do evento de saída da triagem.
 
 ### 4.4 Evento de Saída do Consultório
-Descrição do evento de saída do consultório.
 
 ### 4.5 Resultados e Obtenção de Dados
-Explicação de como os resultados são obtidos e os dados gerados.
 
 ## 5. Interface e Modelo Visual
 ### 5.1 Menu
-Descrição do menu da interface.
 
 ### 5.2 Ajuda
-Informações sobre a seção de ajuda.
 
 ### 5.3 Configurações
-Detalhes sobre a seção de configurações.
 
 ### 5.4 Iniciar Simulação
-Passos para iniciar a simulação.
 
 #### 5.4.1 Balcões
-Informações sobre os balcões da simulação.
 
 #### 5.4.2 Cadeiras
-Informações sobre as cadeiras da simulação.
 
 #### 5.4.3 Consultórios
-Informações sobre os consultórios da simulação.
 
-### 5.5 Botões de tempo de espera
-Detalhes sobre os botões de tempo de espera.
+#### 5.4.4 Botões de tempo de espera
 
-#### 5.5.1 Tempo
-Explicação sobre a funcionalidade do tempo.
+#### 5.5.5 Tempo
 
+## 6. Resultados e representações gráficas
+### 6.1 Tamanho das Filas VS Tempo
+### 6.2 Ocupação dos Médicos VS Tempo 
+### 6.3 Tamanho das Filas de Espera VS Taxas de Chegada
+
+## 7. Conclusões
 ---
 
 ## 1. Introdução ao trabalho
@@ -114,11 +100,17 @@ Com estes pressupostos definidos, iniciou-se a fase de criação de código.
 
 ---
 
-## 2. Desenvolvimento/Execução de código
+## 2. Funcionamento do sistema
 
-Considerando a disponibilização de uma base de dados contendo informação relativa aos pacientes, optou-se pela sua utilização. No entanto, originalmente cada doente era caracterizado por parâmetros que não se encaixam propriamente no contexto do projeto, alguns sendo desnecessários. Assim sendo, removemos as que achamos irrelevantes e adicionamos outros que seriam úteis mais à frente:
+### 2.1. Enquadramento básico
 
-```json
+O programa é um exemplo de uma simulação de eventos discretos em que uma lista de eventos define os acontecimentos da simulação. O programa foi elaborado em Python, com o auxílio de bibliotecas, como FreeSimpleGUI, numpy e matplotlib. 
+
+Os pacientes que participam nesta simulação são carregados de uma base de dados de um ficheiro JSON, e adicionados a uma lista de dicionários, sendo que todas as informações  relevantes relativas ao paciente, quer sejam informações da base de dados, quer informações e parâmetros calculados ao longo da simulação.
+    
+Considerando a disponibilização de uma base de dados contendo informação relativa aos pacientes, optou-se pela sua utilização. No entanto, originalmente cada doente era caracterizado por parâmetros que não se encaixam propriamente no contexto do projeto, alguns sendo desnecessários. Assim sendo, foram removidas as características irrelevantes e adicionamos outros que seriam úteis mais à frente:
+
+````
 {
     "id": "p0",
     "BI": "91702023-5",
@@ -129,19 +121,31 @@ Considerando a disponibilização de uma base de dados contendo informação rel
     "bebe_ao_colo": false,
     "gravidez": false
 }
-```
+````
 
-A cada paciente foram removidas algumas chaves que não seriam úteis no contexto da simulação e adicionamos: incapacidade, bebe_ao_colo, gravidez cujo valor é um boolean. Estas características seriam fundamentais para mais tarde definir prioridades. Para além da remoção, foram adicionadas estas chaves mas com algumas condições para fazer com que a base de dados se aproximasse da realidade:
+A cada paciente foram removidas algumas chaves que não seriam úteis no contexto da simulação e adicionamos: “incapacidade”, “bebe ao colo”, “gravidez” cujo valor é um boolean. Estas características seriam fundamentais para mais tarde definir prioridades. Para além da remoção, foram adicionadas estas chaves mas com algumas condições para fazer com que a base de dados se aproximasse da realidade:
+- Pessoas com menos de 15 anos e mais de 50 anos não poderiam estar grávidas;
+- Pessoas com menos de 15 anos não poderiam estar com bebé ao colo;
+- Da base de dados toda, somente cerca de 20 porcento das pessoas é que apresentam pelo menos um critério de prioridade;
 
-Pessoas com menos de 15 anos e mais de 50 anos não poderiam estar grávidas;
+Após o estabelecimento das condições sobre os dados a tratar, iniciou-se a arquitetura para o funcionamento da clínica. 
 
-Pessoas com menos de 15 anos não poderiam estar com bebé ao colo;
+Desta lista, apenas alguns darão entrada na clínica em função do tempo da simulação, ou seja, são carregados e é-lhes atribuído um tempo de chegada. Enquanto os tempos de chegada atribuídos forem menores ao tempo final de simulação, mais doentes darão entrada na clínica. A partir do momento que os tempos de chegada são maiores do que o tempo final de simulação, mais nenhum doente dará entrada na clínica.
 
-Da base de dados toda, somente cerca de 20% das pessoas é que apresentam pelo menos um critério de prioridade;
+Os intervalos entre os tempos de chegada dos pacientes seguem uma distribuição exponencial negativa com aproximação a um parâmetro de Poisson. Assim que são entrada na clínica, os pacientes são encaminhados para uma fila de espera para a triagem, a qual pode ser uma fila prioritária ou uma fila sem prioridade, ou seja, a fila de espera para a triagem é uma lista de duas listas. Para além disso, os pacientes que tenham uma consulta marcada têm prioridade na fila não prioritária em relação a quem não tem consulta; assim, sempre que um doente com consulta marcada entra na clínica e segue para a fila de triagem, ocupa a posição atrás do último paciente da fila sem consulta marcada, e à frente do primeiro paciente sem consulta marcada. Da fila de triagem, os pacientes são atendidos em balcões, e assim como na fila de triagem, podem ser prioritários e não prioritários. Quando um balcão fica disponível, o primeiro doente da lista respectiva sai da fila e ocupa o balcão. No balcão, o tempo de atendimento segue uma distribuição normal, sendo o tempo de entrada na triagem igual ao tempo de simulação que o paciente ocupa o balcão, e o tempo de saída de triagem é igual ao tempo de entrada mais o tempo de triagem (os valores de tempo de saída e de entrada na triagem são registados no dicionário do doente).
+    
+Depois dos balcões de atendimento, os pacientes seguem para as filas de espera para os consultórios, onde são separados em filas segundo especialidades, as quais também estão divididas em filas com consulta marcada e filas sem consulta marcada, tendo, novamente, os pacientes com consulta prioridade em relação aos que não têm. Para modelar as filas de consultas, utilizamos um dicionário, cujos valores são listas, a lista de pacientes com consultas e sem consultas, formuladas pelos dicionários dos pacientes.
+   
+ A fila de espera para os consultório leva, em primeiro lugar, para as secções divididas em especialidades; e dentro de cada secção, existe um dicionário de consultórios sendo cada consultório definido pelo id e pelo médico. 
+    
+Os médicos, em semelhança com os pacientes, são carregados de um ficheiro JSON e são organizados em um dicionário, no qual todos os parâmetros e critérios, quer sejam da base de dados, quer sejam gerados ao longo da simulação, são registados no dicionário do médico; como por exemplo, o início e fim de turno, o número de doentes atendidos ou o estado de disponibilidade.
+    
+Quando um consultório de uma secção fica disponível, o primeiro paciente da fila com consulta sai da fila e ocupa o consultório; caso a fila com consulta esteja vazia, o primeiro paciente da fila sem consulta ocupa o consultório. Os tempos de consulta seguem uma distribuição normal, sendo a média do tempo de consulta variável com a especialidade. Assim que um paciente sai da consulta, o seu estado é registrado como "ATENDIDO", e todos os dados registrados durante a simulação são utilizados para cálculos das métricas da simulação.
+    
+No final, é possível extrair os resultados relativos a tempos médios de espera, tempos de consulta e atendimento, número de pacientes atendidos em balcões e consultórios, e taxa de ocupações de recursos.
 
-Após o estabelecimento das condições sobre os dados a tratar, iniciou-se a arquitetura para o funcionamento da clínica.
-
-2.1. Chegadas
+# 3. Ficheiros base
+## 3.1. Chegadas
 --
 Inicialmente para as chegadas, foi criada uma função para gerar chegadas de acordo com taxas geradas:
 ```
@@ -180,7 +184,7 @@ Optou-se por não utilizar a função de pré-geração dos tempos de chegada, p
 
 O método de geração de chegadas utilizado no programa é tratado durante a simulação, que será abordado numa secção mais à frente.
 
-2.2. Triagem
+## 3.2. Triagem
 --
 
 Agora que os pacientes já chegam à clínica e recebem um tempo de chegada, precisam de ser atendidos na triagem. Este passo é importante porque é quando os parâmetros de prioridade inicialmente atribuídos são usados para organizar os doentes na fila. Num novo ficheiro Triagem.py foi criada uma função:
@@ -451,7 +455,7 @@ def tempo_medio_FilaTriagem(doentes_atendidos):
     return media
 ```
 
-2.3. Consultórios
+##3.3. Consultórios
 --
 Após os pacientes serem atendidos na receção, estes necessitam de ser encaminhados para as respetivas consultas médicas. Para tal, os pacientes são processados e inseridos nas filas de espera das consultas correspondentes à sua especialidade. Toda a lógica associada à gestão dos consultórios encontra-se implementada no ficheiro Consultórios.py, o qual importa as bibliotecas JSON e NumPy.
 
@@ -804,7 +808,7 @@ No restante conteúno no ficheiro relaciona-se com a obtenção de estatísticas
     return media
    ```
    
-## 4. Simulação de eventos
+# 4. Simulação de eventos
 ## 4.1. Lógica de tempos e eventos
 
 A simulação tem como principal objetivo registar e recolher dados com a evolução do tempo e variação de parâmetros de definição da simulação. Então, a mesma deve de seguir algumas regras e limites impostos por estas mesmas condições. Os parâmetros mais básicos da simulação são o tempo atual de simulaçao, "t atual", e o tempo final de simulação, "t final" (está definido para 12 horas de simulação, 12horasx60minutos).
@@ -996,7 +1000,7 @@ A interface do programa é a peça que permite que o programa seja utilizado de 
 
 Toda a interface foi criada com o auxílio da biblioteca FreeSimpleGUI
 
-# 5.1. Menu
+## 5.1. Menu
 
 O menu da interface é a primeira janela que aparece assim que se inicia o programa. A partir daqui é possível aceder a todas as funcionalidades do program:
 - Configurações- permitem alterar alguns parâmetros da simulação;
@@ -1006,13 +1010,13 @@ O menu da interface é a primeira janela que aparece assim que se inicia o progr
 
 Na verdade, o item menu é a última parte da interface a ficar concluída, já que é necessário que todas as outras funcionalidades estejam prevamente prontas para poderem ser adicionadas e vinculadas às funcionalidades dos botões.
 
-# 5.1.1. Ajuda
+## 5.2. Ajuda
 
 A interface da janela Ajuda mostra um texto que dá um pequeno contexto da trajetório e do fluxo dos doentes da clínica, como é que os diferentes recursos funcionam e alguns dos parâmetros que são registados e que são alteráveis. Adicionalmente, dá instruções e esclarecimentos das funcionalidades e informações das restantes janelas da interface.
 
 Também a janela de Ajuda é bastante simples. A janela continua aberta até que o botão de voltar ao menu seja premido, que desencadeia o fecho da janela, e o Menu é interagível novamente. A funcionalidade "modal" está definida com esta janela, a qual permite que a janela de Menu continue aberta em simultâneo com a janela de Ajuda, mas não é possível interagir com ela.
 
-# 5.1.2. Configurações
+## 5.3. Configurações
 
 A janela de configurações permite alterar os parãmetros da simulação. Os parâmetros alteráveis são:
 - Número total de balcões- é possível variar de 2 a 10;
@@ -1078,7 +1082,7 @@ if modo not in modos_taxas:
         , title="Sucesso")
 ```
 
-# 5.2. Iniciar simulação
+# 5.4. Iniciar simulação
 
 Após a atualização das configurações no menu e a a execução do botão de início de simulação, o utilizador é apresentado a uma janela que já inicia a simulação.
 
@@ -1107,7 +1111,7 @@ CADEIRA_OCUPADA = "red"
 
  As cores são utilizadas, por exemplo, para distinguir elementos livres, ocupados ou indisponíveis, tornando a simulação mais intuitiva para o utilizador.
 
- # 5.2.1. Balcões
+ ### 5.4.1. Balcões
 
  A função principal do módulo é simulacao principal, que recebe a configuração atual da simulação e inicializa os elementos gráficos e lógicos necessários.
 
@@ -1153,7 +1157,7 @@ MAPA BALCOES estabelece a correspondência entre cada botão da interface gráfi
 
 Devido a esta configuração, o utilizador consegue rapidamente perceber se o balcão está a ser ocupado ou não em tempo "real" de simulação. 
 
-# 5.2.1 Cadeiras
+## 5.4.2. Cadeiras
 A sala de espera é representada graficamente através de cadeiras, cujo número ocupado varia consoante o tamanho da fila de triagem.
 
 ```
@@ -1180,7 +1184,7 @@ for i, cadeira in enumerate(CADEIRAS):
 
 Cada cadeira muda de cor de acordo com a sua ocupação: se há um doente na posição correspondente, fica vermelha (OCUPADO), caso contrário mantém-se cinzenta (CADEIRA LIVRE). Este mecanismo permite visualizar em tempo real a ocupação da sala de espera durante a simulação.
 
-# 5.2.3. Consultórios
+## 5.4.3. Consultórios
 
 Os consultórios são representados na interface gráfica por botões que indicam o estado de cada especialidade e do respetivo médico. Tal como acontece com os balcões e a sala de espera, a cor dos botões muda dinamicamente para refletir a disponibilidade.
 
@@ -1225,7 +1229,7 @@ Quando o utilizador clica num consultório, surge uma janela popup com informaç
 
 Cada atualização dos consultórios depende do tempo da simulação (t atual). A cor dos botões é alterada de acordo com o estado do médico e do consultório de maneira instantânea em que se todos os consultórios da especialidade estiverem ocupados, a unidade fica a vermelho. Dentro de cada unidade, se o médico de cada consultório estiver ocupado, o consultório aparece a vermelho e se estiver fora de turno, aparece a cinzento até que o t atual coincida com o inicio de turno do mesmo.  
 
-# 5.2.4. Botões de tempo médio de espera
+### 5.4.4. Botões de tempo médio de espera
 
 Na interface, existem dois botões específicos que permitem ao utilizador obter informação estatística instantânea sobre as filas:
 - Tempo médio de fila de triagem ("-TWAIT-")
@@ -1253,7 +1257,7 @@ if event == "-CWAIT-":
 
 Se o utilizador interagir com os botões em diferentes fases da simulação, o resultado para cada um vai variar visto que digere informações em "tempo real".
 
-# 5.2.5. Tempo
+### 5.4.5. Tempo
 
  Relativamente ao tempo de simulação, a interface consegue controlar o tempo através de um relógio que avança a cada iteração da simulação. A gestão do mesmo é um dos elementos centrais do funcionamento do sistema. O tempo não avança de forma continua, mas sim de forma discreta, controlada por um gerador, permitindo sincronizar a evolução do modelo com a interface gráfica.
 
@@ -1329,7 +1333,7 @@ Os gráficos fundamentais para uma análise e compreensão básica do que ocorre
 
 Com esta informação, é possível retirar conclusões relativas ao comportamento e reação dos recursos disponíveis ao stress submetido e à quantidade de pessoas que chegam à clínica.
 
-# 6.1. Tamanho das Filas VS Tempo
+## 6.1. Tamanho das Filas VS Tempo
     
 Este gráfico, em particular, pode ajudar a perceber em que ponto do dia os diferentes órgãos da clínica ficam sobrecarregados e não conseguem vencer a chegada de doentes à clínica. Assim que uma fila de espera cresce de forma significativa e de forma incomum, significa que os recuros estão sobrelotados. A partir daqui, muitas outras métricas tendem a crescer bastante; métricas como taxas de ocupação, tempos médio de espera e o número de doentes atendidos.
 
@@ -1343,7 +1347,7 @@ Pelo que é possível observar no gráfico, a evolução do tamanho da fila de t
 
 Já a fila de espera para as consultas atinge picos significativos durnate o dia. Ainda na primeira hora de funcionamento, o tamnho das filas atinge um pico local, seguido por um crescimento exponencial até à terceira hora de funcionamento. Isto ocorre graças à grande afluência de pacientes que chega nas 2 horas iniciais de simulação, e apesar da quantidade de pessoas chegadas à clínica diminuam a partir da segunda hora, a sobrelotação dos médicos faz com que as filas tenham um acúmulo de pesssoas e atinjam grande valores de tamanho. Apenas a partir da quarta hora de simulação é que a equipa de médicos consegue atender grande parte das pessoas, pois taxa de chegada de pessoas é bem menor. Entre a quinta hora de funcionamento e a décima, a clínica tem um período mais calmo, em que os valores do tamanho da fila parecem flutuar à volta das 13 pessoas. Pelos valores serem aproximadamente estáveis, os médicos devem conseguir atender a quantidade de pessoas que chega durante esse período, mas pelo valor médio ser de cerca de 13 pessoas, muito provavelmente, a grande afluência de horas anteriores faz com que haja um acúmulo na fila. Assim cocnclui-se que neste período os médicos satisfazem o número de chegada de doentes, mas não o acúmulo e o grande número de pessoas que chegou durante horas anteriores. Finalmente, no fim do dia há outro grande pico e as filas crescem esxponencialmente mais uma vez e ajuda a comprovar que no período que antecede este, os médicos já estavam com uma ocupação quase máxima.
 
-# 6.2. Ocupação dos Médicos VS Tempo
+## 6.2. Ocupação dos Médicos VS Tempo
 
 A ocupação dos médicos revela a resposta dos consultórios e da equipa de médicos ao stress de chegadas de pessoas. Se os médicos estiverem a uma taxa próxima ao máximo, significa que os consultórios estão sobrelotados e é esperado um aumento no tamanho de fila para as conultas.
 
@@ -1356,6 +1360,34 @@ De seguida está um exemplo de um gráfico que mostra a evolução da taxa de oc
 Para perceber melhor este gráfico, é preciso conhecer os turnos dos médicos. No total são 23 médicos que trabalham durante 8 horas. Para facilitar a compreesnsão de resultados e a simulação em si, os turnos foram simplificados: cerca de metade dos médicos trabalham as primeiro 8 horas e a outra metade as últimas 8 horas. Isto faz com que haja uma sobreposição de turnos nas 4 horas a metade do dia, ou seja, a partir da quarta hora de funcionamento até à oitava hora todos os médicos estão em funções. 
 
 Podemos verificar que na maioria do dia, as taxas de ocupação rondam os 50 por cento. No entanto, este valor tem significados diferentes ao longo do dia. Nas primeiras 4 horas de funcionamento, 50 por cento da taxa de ocupação significa que a quase a totalidade dos médicos em funções está ocupada, já que apenas cerca de metade estão no turno. O mesmo raciocínio aplica-se a partir da oitava hora de funcionamento. Por volta da quinta hora de funcioanamento, existe um grande decréscimo na ocupação dos médicos, provavelente porque não só a taxa de chegada de pessoas é relativamente baixa, mas porque como existe um maior número de médicos em funções, houve um maior número de doentes atnedidos entra a quarta e a quinta horas, diminundo as pessoas na fila de espera. Também há um grande decréscimo a partir da oitava hora, que é a hora em que uma metade dos médicos terminam funções. A partir desta hora, doentes que sejam relativos a especialidades que terminam a essa hora já não dão entrada na clínica, e os pacientes que estavam a ser atendidos por esse grupos de médicos acabam a respetiva consulta e acabam por desocupar o médico. Isto faz com que a taxa de ocupação atinja valores mínimos.
+
+## 6.3 Tamanho das Filas de Espera VS Taxas de Chegada
+
+Esta informação ajuda a corroborar as conclusões retitadas nos \hyperlink{tam_filas_tempo}{gráficos que relacionam os tamanhos de fila de espera com o tempo} e complementam todas as outras informações retiradas da simulação.
+
+De seguida está um exemplo de um possível gráfico que relaciona o tamanho da fila de triagem com a taxa de chegada de pacientes e outro que relaciona o tamanho da fila para as consultas com a taxa de chegada de pacientes.
+```
+    \centering
+    \includegraphics[width=0.48\textwidth]{./Imagens/FILACONSVSTAXACHEG.png}
+    \hfill
+    \includegraphics[width=0.48\textwidth]{./Imagens/FILATRIAGVSTAXACHEG.png}
+```
+
+Conclui-se através da análise dos gráficos que tanto a triagem como a consultório têm filas maiores em horas a seguir ao horário de pico. Isto ocorre porque apesar do stress de chegadas ser maior no horário de pico, o acúmulo de pessoas é crescente ao longo do dia caso a equipa de médicos não consiga vencer a chegada de pacientes. 
+
+Na triagem, observa-se que os valores médios das filas são quase nulos, o que significa que os balões satisfazem eficazmente a chegada de doentes.
+
+No entanto, as filas para as consultas têm valores já significaticos. Apesar do número de consultõrios ser bem maior em relação aos balcões, as consultas demoram bem mais tempo, o que faz com que a taxa de entrada de pessoas por hora seja bem menor do que a taxa de entrada de pessoas nos balcões. Assim, é natural que o tamanho médio das filas para as consultas ser bem maior.
+
+# 7. Conclusões
+
+O projeto revelou-se particularmente útil, uma vez que permitiu desenvolver novas competências técnicas, nomeadamente na programação e gestão de interfaces gráficas, ao mesmo tempo que fomentou o raciocínio lógico e a capacidade de planear e organizar o código de forma estruturada. Para além disso, surgiu como um desafio que pôs à prova as nossas capacidades de trabalhar sobre pressão e de resolver problemas, visto que estes surgiram muitas vezes e necessitavam de uma resposta rápida para não condicionar o desenvolvimento do projeto. 
+
+Este processo de desenvolvimento permitiu-nos também compreender melhor a importância de uma arquitetura de código modular, da documentação clara e da manutenção da coerência entre a interface gráfica e a lógica subjacente da simulação. De maneira geral, o projeto de desenvolvemos é motivo de orgulho porque acreditamos que se apresenta como uma  ferramenta interessante e intuitiva do ponto de vista do utilizador.
+
+Por fim, este trabalho evidenciou a relevância da simulação como instrumento pedagógico, permitindo não só analisar fluxos e comportamentos em contexto controlado, como também desenvolver competências transversais, tais como a organização, a gestão de tempo e a capacidade de colaboração, que serão úteis em projetos futuros e no exercício profissional.
+
+    
 
     
 
