@@ -1,6 +1,6 @@
 #TPC 8
 # Relatório de projeto
--
+
 ## Simulação de uma clínica de saúde
 Autores: Cláudia Teixeira a110414 / Fernando Costa a110808
 Docentes: José Carlos Filipe Ramalho / Luís Filipe Costa Cunha
