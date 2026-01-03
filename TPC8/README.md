@@ -151,8 +151,8 @@ Quando um consultório de uma secção fica disponível, o primeiro paciente da 
     
 No final, é possível extrair os resultados relativos a tempos médios de espera, tempos de consulta e atendimento, número de pacientes atendidos em balcões e consultórios, e taxa de ocupações de recursos.
 
-# 3. Ficheiros base
-## 3.1. Chegadas
+## 3. Ficheiros base
+### 3.1. Chegadas
 --
 Inicialmente para as chegadas, foi criada uma função para gerar chegadas de acordo com taxas geradas:
 ```
@@ -191,7 +191,7 @@ Optou-se por não utilizar a função de pré-geração dos tempos de chegada, p
 
 O método de geração de chegadas utilizado no programa é tratado durante a simulação, que será abordado numa secção mais à frente.
 
-## 3.2. Triagem
+### 3.2. Triagem
 --
 
 Agora que os pacientes já chegam à clínica e recebem um tempo de chegada, precisam de ser atendidos na triagem. Este passo é importante porque é quando os parâmetros de prioridade inicialmente atribuídos são usados para organizar os doentes na fila. Num novo ficheiro Triagem.py foi criada uma função:
@@ -462,7 +462,7 @@ def tempo_medio_FilaTriagem(doentes_atendidos):
     return media
 ```
 
-##3.3. Consultórios
+###3.3. Consultórios
 --
 Após os pacientes serem atendidos na receção, estes necessitam de ser encaminhados para as respetivas consultas médicas. Para tal, os pacientes são processados e inseridos nas filas de espera das consultas correspondentes à sua especialidade. Toda a lógica associada à gestão dos consultórios encontra-se implementada no ficheiro Consultórios.py, o qual importa as bibliotecas JSON e NumPy.
 
@@ -815,8 +815,8 @@ No restante conteúno no ficheiro relaciona-se com a obtenção de estatísticas
     return media
    ```
    
-# 4. Simulação de eventos
-## 4.1. Lógica de tempos e eventos
+## 4. Simulação de eventos
+### 4.1. Lógica de tempos e eventos
 
 A simulação tem como principal objetivo registar e recolher dados com a evolução do tempo e variação de parâmetros de definição da simulação. Então, a mesma deve de seguir algumas regras e limites impostos por estas mesmas condições. Os parâmetros mais básicos da simulação são o tempo atual de simulaçao, "t atual", e o tempo final de simulação, "t final" (está definido para 12 horas de simulação, 12horasx60minutos).
 
@@ -870,7 +870,7 @@ while eventos and t_atual < tfinal:
         ocupacao_medicos.append(taxa_ocupacao)
 ```
 
-## 4.2. Evento de chegada
+### 4.2. Evento de chegada
 O primeiro evento da simulação gerado é a chegada do primeiro paciente à clínica, o qual passa por uma validação do tempo de chegada.
 ```
 t_chegada = np.random.exponential(1/taxas[0][2])
@@ -951,7 +951,7 @@ for tax in taxas:
 
 Esta abordagem torna a lógica de sequenciamento de eventos mais fluida e fiel à realidade, uma vantagem sobre a abordagem de criação de todos os tempos de chegada no início da simulação, o que poderia criar uma sensação de condicionamento artificial e sobrecarregamento do sistema. Depois da validação do novo tempo de chegada do paciente, é criado um novo evento "CHEGADA" que é adicionado à lista de eventos.
 
-## 4.3. Evento de saída da triagem
+### 4.3. Evento de saída da triagem
 
 No caso do evento ser do tipo "SAI TRIAGEM", o primeiro acontecimento é definido pela desocupação dos balcões. O dicionário do balcão é atualizado, aumentando em uma unidade o parâmetro "ndoentes atendidos" e o parâmetro "tempo ocupado" soma-se ao tempo de triagem. O balcão é desocupado e está agora disponível a receber um novo paciente. 
 
@@ -975,7 +975,7 @@ if doente["consulta"]:
             con.tentar_atribuir_fila(esp, filas_consultas, seccoes, eventos, t_atual)
 ```
 
-## 4.4. Evento de saída do consultório
+### 4.4. Evento de saída do consultório
 
 Por último, o evento do tipo "SAI CONSULTORIO" tem um parâmetro adicional em relação aos restantes eventos, o parâmetro "medico", que define qual o médico irá atender o paciente. Este parâmetro permite facilitar a ocupação do consultório, pois é definido pela função que gera o evento, a função "tentar atribuir fila".
 
@@ -991,7 +991,7 @@ Esta função calcula qual é o próximo médico a desocupar. Isto permite dimin
 ```
 O evento começa por desocupar o médico, atualiza o seu dicionário e deixa-o disponível para atender o próximo paciente. De seguida, tenta ocupar novamente o consultório com tentativas falhadas anteriores com a função "tenta atribuir fila". Daqui, é determinado qual o próximo médico que será desocupado e devolve o médico, com o auxílio da função "atribuir doente a medico"
 
-## 4.5. Resultados e obtenção de resultados
+### 4.5. Resultados e obtenção de resultados
 
 No fim, a simulação retorna dados de duas formas:
 - return
@@ -1001,13 +1001,13 @@ O return devolve os dados assim que toda a informação é tratada e bem definid
 
  O yield é uma função nova que não abordamos nas aulas, mas que decidimos utilizar porque, como poderemos ver a seguir na secção   \ref{sec:Interface}, o yield será fundamental para que seja mais fácil gerar uma interface animada e dinâmica. Basicamente, a maior diferença do yield em relação ao return é que torna a simulação uma função geradora, que retorna as informações de forma gradual, e que de certa forma, diminui a sobrecarga sobre o sistema.
 
-# 5. Interface e modelo visual 
+## 5. Interface e modelo visual 
 
 A interface do programa é a peça que permite que o programa seja utilizado de forma mais simples e que qualquer pessoa consiga usar o programa de forma intuitiva. Para além disso, permite adicionar elementos visuais que permitem que a informação seja passadade forma mais intuitiva e clara.
 
 Toda a interface foi criada com o auxílio da biblioteca FreeSimpleGUI
 
-## 5.1. Menu
+### 5.1. Menu
 
 O menu da interface é a primeira janela que aparece assim que se inicia o programa. A partir daqui é possível aceder a todas as funcionalidades do program:
 - Configurações- permitem alterar alguns parâmetros da simulação;
@@ -1017,13 +1017,13 @@ O menu da interface é a primeira janela que aparece assim que se inicia o progr
 
 Na verdade, o item menu é a última parte da interface a ficar concluída, já que é necessário que todas as outras funcionalidades estejam prevamente prontas para poderem ser adicionadas e vinculadas às funcionalidades dos botões.
 
-## 5.2. Ajuda
+### 5.2. Ajuda
 
 A interface da janela Ajuda mostra um texto que dá um pequeno contexto da trajetório e do fluxo dos doentes da clínica, como é que os diferentes recursos funcionam e alguns dos parâmetros que são registados e que são alteráveis. Adicionalmente, dá instruções e esclarecimentos das funcionalidades e informações das restantes janelas da interface.
 
 Também a janela de Ajuda é bastante simples. A janela continua aberta até que o botão de voltar ao menu seja premido, que desencadeia o fecho da janela, e o Menu é interagível novamente. A funcionalidade "modal" está definida com esta janela, a qual permite que a janela de Menu continue aberta em simultâneo com a janela de Ajuda, mas não é possível interagir com ela.
 
-## 5.3. Configurações
+### 5.3. Configurações
 
 A janela de configurações permite alterar os parãmetros da simulação. Os parâmetros alteráveis são:
 - Número total de balcões- é possível variar de 2 a 10;
@@ -1089,7 +1089,7 @@ if modo not in modos_taxas:
         , title="Sucesso")
 ```
 
-# 5.4. Iniciar simulação
+## 5.4. Iniciar simulação
 
 Após a atualização das configurações no menu e a a execução do botão de início de simulação, o utilizador é apresentado a uma janela que já inicia a simulação.
 
@@ -1118,7 +1118,7 @@ CADEIRA_OCUPADA = "red"
 
  As cores são utilizadas, por exemplo, para distinguir elementos livres, ocupados ou indisponíveis, tornando a simulação mais intuitiva para o utilizador.
 
- ### 5.4.1. Balcões
+ #### 5.4.1. Balcões
 
  A função principal do módulo é simulacao principal, que recebe a configuração atual da simulação e inicializa os elementos gráficos e lógicos necessários.
 
@@ -1164,7 +1164,7 @@ MAPA BALCOES estabelece a correspondência entre cada botão da interface gráfi
 
 Devido a esta configuração, o utilizador consegue rapidamente perceber se o balcão está a ser ocupado ou não em tempo "real" de simulação. 
 
-## 5.4.2. Cadeiras
+#### 5.4.2. Cadeiras
 A sala de espera é representada graficamente através de cadeiras, cujo número ocupado varia consoante o tamanho da fila de triagem.
 
 ```
@@ -1191,7 +1191,7 @@ for i, cadeira in enumerate(CADEIRAS):
 
 Cada cadeira muda de cor de acordo com a sua ocupação: se há um doente na posição correspondente, fica vermelha (OCUPADO), caso contrário mantém-se cinzenta (CADEIRA LIVRE). Este mecanismo permite visualizar em tempo real a ocupação da sala de espera durante a simulação.
 
-## 5.4.3. Consultórios
+#### 5.4.3. Consultórios
 
 Os consultórios são representados na interface gráfica por botões que indicam o estado de cada especialidade e do respetivo médico. Tal como acontece com os balcões e a sala de espera, a cor dos botões muda dinamicamente para refletir a disponibilidade.
 
@@ -1236,7 +1236,7 @@ Quando o utilizador clica num consultório, surge uma janela popup com informaç
 
 Cada atualização dos consultórios depende do tempo da simulação (t atual). A cor dos botões é alterada de acordo com o estado do médico e do consultório de maneira instantânea em que se todos os consultórios da especialidade estiverem ocupados, a unidade fica a vermelho. Dentro de cada unidade, se o médico de cada consultório estiver ocupado, o consultório aparece a vermelho e se estiver fora de turno, aparece a cinzento até que o t atual coincida com o inicio de turno do mesmo.  
 
-### 5.4.4. Botões de tempo médio de espera
+#### 5.4.4. Botões de tempo médio de espera
 
 Na interface, existem dois botões específicos que permitem ao utilizador obter informação estatística instantânea sobre as filas:
 - Tempo médio de fila de triagem ("-TWAIT-")
@@ -1264,7 +1264,7 @@ if event == "-CWAIT-":
 
 Se o utilizador interagir com os botões em diferentes fases da simulação, o resultado para cada um vai variar visto que digere informações em "tempo real".
 
-### 5.4.5. Tempo
+#### 5.4.5. Tempo
 
  Relativamente ao tempo de simulação, a interface consegue controlar o tempo através de um relógio que avança a cada iteração da simulação. A gestão do mesmo é um dos elementos centrais do funcionamento do sistema. O tempo não avança de forma continua, mas sim de forma discreta, controlada por um gerador, permitindo sincronizar a evolução do modelo com a interface gráfica.
 
@@ -1327,7 +1327,7 @@ if event == "-FAST-":
         break 
 ````
 
-# 6. Resultados e representações gráficas
+## 6. Resultados e representações gráficas
 
 A representação gráfica dos resultados ajuda bastante na compreensão dos dados e métricas registados pois é possível interpretar facilmente o funcionamento da clínica.
 
@@ -1340,7 +1340,7 @@ Os gráficos fundamentais para uma análise e compreensão básica do que ocorre
 
 Com esta informação, é possível retirar conclusões relativas ao comportamento e reação dos recursos disponíveis ao stress submetido e à quantidade de pessoas que chegam à clínica.
 
-## 6.1. Tamanho das Filas VS Tempo
+### 6.1. Tamanho das Filas VS Tempo
     
 Este gráfico, em particular, pode ajudar a perceber em que ponto do dia os diferentes órgãos da clínica ficam sobrecarregados e não conseguem vencer a chegada de doentes à clínica. Assim que uma fila de espera cresce de forma significativa e de forma incomum, significa que os recuros estão sobrelotados. A partir daqui, muitas outras métricas tendem a crescer bastante; métricas como taxas de ocupação, tempos médio de espera e o número de doentes atendidos.
 
@@ -1354,7 +1354,7 @@ Pelo que é possível observar no gráfico, a evolução do tamanho da fila de t
 
 Já a fila de espera para as consultas atinge picos significativos durnate o dia. Ainda na primeira hora de funcionamento, o tamnho das filas atinge um pico local, seguido por um crescimento exponencial até à terceira hora de funcionamento. Isto ocorre graças à grande afluência de pacientes que chega nas 2 horas iniciais de simulação, e apesar da quantidade de pessoas chegadas à clínica diminuam a partir da segunda hora, a sobrelotação dos médicos faz com que as filas tenham um acúmulo de pesssoas e atinjam grande valores de tamanho. Apenas a partir da quarta hora de simulação é que a equipa de médicos consegue atender grande parte das pessoas, pois taxa de chegada de pessoas é bem menor. Entre a quinta hora de funcionamento e a décima, a clínica tem um período mais calmo, em que os valores do tamanho da fila parecem flutuar à volta das 13 pessoas. Pelos valores serem aproximadamente estáveis, os médicos devem conseguir atender a quantidade de pessoas que chega durante esse período, mas pelo valor médio ser de cerca de 13 pessoas, muito provavelmente, a grande afluência de horas anteriores faz com que haja um acúmulo na fila. Assim cocnclui-se que neste período os médicos satisfazem o número de chegada de doentes, mas não o acúmulo e o grande número de pessoas que chegou durante horas anteriores. Finalmente, no fim do dia há outro grande pico e as filas crescem esxponencialmente mais uma vez e ajuda a comprovar que no período que antecede este, os médicos já estavam com uma ocupação quase máxima.
 
-## 6.2. Ocupação dos Médicos VS Tempo
+### 6.2. Ocupação dos Médicos VS Tempo
 
 A ocupação dos médicos revela a resposta dos consultórios e da equipa de médicos ao stress de chegadas de pessoas. Se os médicos estiverem a uma taxa próxima ao máximo, significa que os consultórios estão sobrelotados e é esperado um aumento no tamanho de fila para as conultas.
 
@@ -1368,7 +1368,7 @@ Para perceber melhor este gráfico, é preciso conhecer os turnos dos médicos. 
 
 Podemos verificar que na maioria do dia, as taxas de ocupação rondam os 50 por cento. No entanto, este valor tem significados diferentes ao longo do dia. Nas primeiras 4 horas de funcionamento, 50 por cento da taxa de ocupação significa que a quase a totalidade dos médicos em funções está ocupada, já que apenas cerca de metade estão no turno. O mesmo raciocínio aplica-se a partir da oitava hora de funcionamento. Por volta da quinta hora de funcioanamento, existe um grande decréscimo na ocupação dos médicos, provavelente porque não só a taxa de chegada de pessoas é relativamente baixa, mas porque como existe um maior número de médicos em funções, houve um maior número de doentes atnedidos entra a quarta e a quinta horas, diminundo as pessoas na fila de espera. Também há um grande decréscimo a partir da oitava hora, que é a hora em que uma metade dos médicos terminam funções. A partir desta hora, doentes que sejam relativos a especialidades que terminam a essa hora já não dão entrada na clínica, e os pacientes que estavam a ser atendidos por esse grupos de médicos acabam a respetiva consulta e acabam por desocupar o médico. Isto faz com que a taxa de ocupação atinja valores mínimos.
 
-## 6.3 Tamanho das Filas de Espera VS Taxas de Chegada
+### 6.3 Tamanho das Filas de Espera VS Taxas de Chegada
 
 Esta informação ajuda a corroborar as conclusões retitadas nos \hyperlink{tam_filas_tempo}{gráficos que relacionam os tamanhos de fila de espera com o tempo} e complementam todas as outras informações retiradas da simulação.
 
@@ -1386,7 +1386,7 @@ Na triagem, observa-se que os valores médios das filas são quase nulos, o que 
 
 No entanto, as filas para as consultas têm valores já significaticos. Apesar do número de consultõrios ser bem maior em relação aos balcões, as consultas demoram bem mais tempo, o que faz com que a taxa de entrada de pessoas por hora seja bem menor do que a taxa de entrada de pessoas nos balcões. Assim, é natural que o tamanho médio das filas para as consultas ser bem maior.
 
-# 7. Conclusões
+## 7. Conclusões
 
 O projeto revelou-se particularmente útil, uma vez que permitiu desenvolver novas competências técnicas, nomeadamente na programação e gestão de interfaces gráficas, ao mesmo tempo que fomentou o raciocínio lógico e a capacidade de planear e organizar o código de forma estruturada. Para além disso, surgiu como um desafio que pôs à prova as nossas capacidades de trabalhar sobre pressão e de resolver problemas, visto que estes surgiram muitas vezes e necessitavam de uma resposta rápida para não condicionar o desenvolvimento do projeto. 
 
