@@ -11,11 +11,11 @@
 ---
 
 ## 1. Introdução ao trabalho
-##1.1. Contexto
+## 1.1. Contexto
 
 As estimativas dos tempos e tamanhos das filas de espera de estabelecimentos de saúde é um dos temas e preocupações principais quando o tema é eficácia de gestão de recursos. Um programa de simulação de chegadas de pacientes a uma clínica é um exemplo de uma forma de tentar perceber quais estratégias podem agilizar o atendimento de pacientes, garantindo a divisão de tarefas equitativas entre órgãos diferentes da clínica.
 
-##2.2. Objetivos
+## 1.2. Objetivos
 
 Ao elaborar uma simulação deste género, é esperado obter resultados relativos a:
 1. Intervalos de tempo de:
@@ -26,9 +26,9 @@ Ao elaborar uma simulação deste género, é esperado obter resultados relativo
    
     1.3 ocupação de recursos.
    
-3. Tamanhos de filas de espera;
+2. Tamanhos de filas de espera;
    
-4. Taxas de:
+3. Taxas de:
     3.1 número de pacientes atendidos;
    
     3.2 número de pacientes por atender;
@@ -37,6 +37,8 @@ Ao elaborar uma simulação deste género, é esperado obter resultados relativo
    
 Com o tratamento destes dados, podemos inferir a eficácia e a exigência dos vários recursos em função de vários parâmetros, como número de chegadas de pacientes, quantidade de recursos em serviço e tempo.
 O objetivo da elaboração deste projeto, no âmbito da unidade curricular de Algoritmos e Técnicas de Programação, é implementar uma simulação de eventos discretos que modela o funcionamento de uma clínica de saúde, permitindo avaliar o impacto de diferentes parâmetros no desempenho do sistema.
+
+## 1.3. Processo criativo inicial
 
 Aquando da disponibilização do guião do projeto, foi possível reconhecer de imediato a sua dimensão e complexidade face ao nível de conhecimentos de programação até então adquiridos. Ainda assim, a ambição de desenvolver um projeto bem estruturado e o desafio associado ao desconhecido motivaram o início do trabalho.  
 
@@ -740,7 +742,180 @@ No restante conteúno no ficheiro relaciona-se com a obtenção de estatísticas
     return media
    ```
    
+## 4. Simulação de eventos
+## 4.1. Lógica de tempos e eventos
+
+A simulação tem como principal objetivo registar e recolher dados com a evolução do tempo e variação de parâmetros de definição da simulação. Então, a mesma deve de seguir algumas regras e limites impostos por estas mesmas condições. Os parâmetros mais básicos da simulação são o tempo atual de simulaçao, "t atual", e o tempo final de simulação, "t final" (está definido para 12 horas de simulação, 12horasx60minutos).
+
+Para o correto funcionamento da simulação, tivemos de definir os principais acontecimentos numa lista de eventos, para que quando o tempo de simulação se igualasse com o tempo do evento, os comandos do código executassem e os dados se atualizassem. Então, os eventos na nossa simulação podem ser classificados como:
+
+- "CHEGADA"
+- "ENTRA TRIAGEM"
+- "SAI TRIAGEM"
+- "ENTRA CONSULTORIO"
+- "SAI CONSULTORIO"
+
+Com o decorrer do tempo de simulação, os eventos são retirados da fila de eventos e são processados de forma a executar comandos e funções, responsáveis por     tratar e gerar dados. Então, a simulação é controlada por um ciclo while que garante que a simulação decorre entre os limites de tempo impostos e o processamento dos eventos.
+```
+while eventos and t_atual < tfinal:
+        evento = eventos.pop(0)
+        t_atual = evento["tempo"]
+        doente = evento["doente"]
+```
+Existem também algumas listas que registam dados e métricas importantíssimas para o tratamento de resulatados e concluões a cada ciclo. 
+```
+tempos = []
+    tam_fila_triagem = []
+    tam_filas_consultas = {}
+    tam_filas_consultas_total = []
+    ocupacao_medicos = []
+```
+A cada ciclo, estes dados são tratados com funções auxiliares, ou simplesmente adicionados à respetiva lista.
+```
+while eventos and t_atual < tfinal:
+        evento = eventos.pop(0)
+        t_atual = evento["tempo"]
+        doente = evento["doente"]
+        
+        #------REGISTO PARA GRÁFICOS--------
+
+        #tamanho total da fila de triagem
+        fila_total_triagem = len(fila_triagem[0]) + len(fila_triagem[1])
+
+        #tamanho total das filas para as consultas
+        tam_filas_consultas = con.tamanho_filas_cosultas(filas_consultas,tam_filas_consultas)
+        tam_filas_consultas_total = con.tamanho_total_filasconsultas(filas_consultas,tam_filas_consultas,tam_filas_consultas_total)
+
+        #médicos ocupados
+        medicos_ocupados = sum(1 for m in medicos if m["doente"] is not None)
+        taxa_ocupacao = (medicos_ocupados / len(medicos)) *100
+
+        #guardar valores
+        tempos.append(t_atual)
+        tam_fila_triagem.append(fila_total_triagem)
+        #tam_fila_consultas.append(fila_total_consultas)
+        ocupacao_medicos.append(taxa_ocupacao)
+```
+
+## 4.2. Evento de chegada
+O primeiro evento da simulação gerado é a chegada do primeiro paciente à clínica, o qual passa por uma validação do tempo de chegada.
+```
+t_chegada = np.random.exponential(1/taxas[0][2])
+    
+validado = False
+while not validado:
+    i = random.randint(0, len(doentes)-1)
+    candidato = doentes[i]
+
+    if ch.chegada_valida(candidato, t_chegada, horarios):
+        
+        doente = doentes.pop(i)
+        doente["tchegada"] = round(t_chegada,2)
+        eventos.append({
+        "tempo": round(t_chegada,2),
+        "tipo": "CHEGADA",
+        "doente": doente
+        })
+        validado = True
+        doentes_atendidos.append(doente) #registo
+        doente["estado_final"] = "FILA_TRIAGEM" #registo
+```
+
+Nesta validação, são comparados 3 parâmetros, o tempo de chegada apurado para o paciente, a especialidade para a qual este paciente se dirigirá e a janela de funcionamento da especialidade; esta validação garante que o tempo de chegada do doente deve de estar compreendido na janela de funcionamento da especialidade, tomando como princípio que um paciente não daria entrada no consultório algumas horas em antes de ser atendido. Caso o tempo de chegada se enquadre nesta validação, o tempo de chegada é registado no dicionário do doente e é definido o primeiro evento "CHEGADA" da simulação, caso contrário, serão testados novos pacientes até que o sistema encontre um tempo adequado à validação e possa ser criado o evento.
+
+Todos os eventos criados são adicionados a uma lista de eventos, sendo que cada evento individualmente é um dicionário que contém os parâmetros "tipo", "doente" e "tempo". No caso do evento de "CHEGADA", é o evento responsável por desencadear todos os acontecimentos futuros relativos a esse paciente. Quando o tempo de simulação se iguala ao parâmetro "tempo" do evento de chegada, o evento sai da lista de eventos e o doente é adicionado a uma fila de triagem.
+
+```
+if evento["tipo"] == "CHEGADA":
+            #doente = evento["doente"] 
+            fila_triagem = tr.chegadaAntesTriagem(doente, fila_triagem)
+```
+
+Neste ponto, os eventos "CHEGADA" e "ENTRA TRIAGEM" são condensados numa única condição, porque a chegada do doente implica a entrada do mesmo para a fila de atendimento. Este pequeno detalhe diminui a exaustão do sistema, ao não adicionar eventos desnecessários. 
+
+Ainda no seguimento da condição do evento ser do tipo chegada, o paciente tenta ocupar um balcão de atendimento, assim que estiver em primeiro lugar da fila de espera relativa ao tipo de balcão (se prioritário ou não), e quando o mesmo estiver disponível. Caso a ocupação falhe, será dada uma nova tentativa, mas quando o balcão estiver disponível. Isto ocorrerá no desenvolvimento do evento "SAI TRIAGEM".
+
+```
+fila_triagem, balcoes, eventos_gerados = 
+tr.ocupar_balcaoTriagem(fila_triagem, balcoes, t_atual)
+        for evento in eventos_gerados:
+            if evento != None:
+                eventos.append(evento)
+```
+
+Quando o doente ocupa o balcão, os seus dados do dicionário são atualizados, os parâmetros "tentrada triagem" e "tsaida triagem" obtêm agora um valor que não None. O que define estes dois parâmetros é o tempo atual de simulação, que é igual ao tempo de entrada no balcão, e o tempo de triagem  que segue uma distribuição normal, do qual é possível obter o tempo de desocupação do balcão através da soma do tempo de ocupação do balcão e o próprio tempo de triagem. Se o doente ocupa um balcão, é criado um novo evento do tipo "SAI TRIAGEM", com relação ao mesmo doente e com um tempo igual ao tempo de desocupação de balcão. Este evento também é adicionado à lista de eventos. 
+
+No final da execução da condição do evento "CHEGADA", é criada uma nova chegada de um novo doente. Esta chegada segue a lógica da chegada do primeiro paciente, com a única diferença que o tempo de chegada neste caso é igual ao tempo de simulação atual somado com o tempo de intervalo gerado por uma distribuição exponencial negativa com aproximação a um parâmetro de Poisson.
+
+```
+for tax in taxas:
+                if t_atual >= tax[0] and t_atual <= tax[1]:
+                    taxa_atual = tax[2]
+            
+            intervalo = np.random.exponential(1 / taxa_atual)
+            proxima_chegada = t_atual + intervalo
+
+            if proxima_chegada < tfinal and doentes:
+
+                validado = False
+                while not validado:
+                    j = random.randint(0, len(doentes)-1)
+                    candidato = doentes[j]
+
+                    if ch.chegada_valida(candidato, proxima_chegada, horarios):
+
+                        validado = True
+                        novo_doente = doentes.pop(j)
+                        novo_doente["tchegada"] = round(proxima_chegada,2)
+                        eventos.append({
+                        "tempo": round(proxima_chegada,2),
+                        "tipo": "CHEGADA",
+                        "doente": novo_doente
+                        })
+                        doentes_atendidos.append(doente) #registo
+                        doente["estado_final"] = "FILA_TRIAGEM" #registo
+```
+
+Esta abordagem torna a lógica de sequenciamento de eventos mais fluida e fiel à realidade, uma vantagem sobre a abordagem de criação de todos os tempos de chegada no início da simulação, o que poderia criar uma sensação de condicionamento artificial e sobrecarregamento do sistema. Depois da validação do novo tempo de chegada do paciente, é criado um novo evento "CHEGADA" que é adicionado à lista de eventos.
+
+## 4.3. Evento de saída da triagem
+
+No caso do evento ser do tipo "SAI TRIAGEM", o primeiro acontecimento é definido pela desocupação dos balcões. O dicionário do balcão é atualizado, aumentando em uma unidade o parâmetro "ndoentes atendidos" e o parâmetro "tempo ocupado" soma-se ao tempo de triagem. O balcão é desocupado e está agora disponível a receber um novo paciente. 
+
+```
+elif evento["tipo"] == "SAI_TRIAGEM":
+
+            balcoes,_ = tr.desocupar_balcaoTriagem(balcoes, t_atual)
+            fila_triagem, balcoes, novos = 
+            tr.ocupar_balcaoTriagem(fila_triagem, balcoes, t_atual)
+```
+Também o dicionário do balcão é atualizado, aumentando em uma unidade o parâmetro "ndoentes atendidos" e o parâmetro "tempo ocupado" soma-se ao tempo de triagem. Assim que o tempo de simulação iguala-se  ao tempo de saída da triagem do dicionário do paciente, o balcão é desocupado e está agora disponível a receber um novo paciente. Adicionalmente, é criado um novo evento, mas agora do tipo "SAI TRIAGEM".
+
+Na última fase do evento, o doente entra na fila específica da especialidade (se tem ou não consulta), e tenta, pela primeira vez, ocupar um consultório. Esta lógica é muito semelhante ao caso da relação entre os eventos "CHEGADA" e "ENTRA TRIAGEM", pois também a saída da triagem impõe a tentativa de entrada num consultório.Logo, a condensação dos eventos "SAI TRIAGEM" e "ENTRA CONSULTORIO" facilitam o desempenho do sistema. Caso a tentativa de entrar no consultório falhe, será dada uma nova tentativa quando um consultório ficar livre. A entrada no consultório, é talvez, o acontecimento mais complexo, e por isso, a explicação será dada mais adiante, na subsecção SAI CONSULTÓRIO.
+
+```
+if doente["consulta"]:
+                filas_consultas[esp]["com_consulta"].append(doente)
+            else:
+                filas_consultas[esp]["sem_consulta"].append(doente)
+
+            con.tentar_atribuir_fila(esp, filas_consultas, seccoes, eventos, t_atual)
+```
+
+## 4.4. Evento de saída do consultório
+
+Por último, o evento do tipo "SAI CONSULTORIO" tem um parâmetro adicional em relação aos restantes eventos, o parâmetro "medico", que define qual o médico irá atender o paciente. Este parâmetro permite facilitar a ocupação do consultório, pois é definido pela função que gera o evento, a função "tentar atribuir fila".
+
+Esta função calcula qual é o próximo médico a desocupar. Isto permite diminuir o número de eventos que representam as tentativas do paciente entrar no consultório a uma só, cujo tempo do evento é igual ao tempo de fim da consulta corrente do médico; caso contrário, seriam adicionados vários eventos "SAI CONSULTORIO" à lista de eventos em pequenos intervalos de tempo até que o paciente conseguisse entrar no consultório, resultando numa falsa sensação de condicionamento e uma sobrecarga no sistema.
+
+```
+{
+"tempo": medico["fim_consulta"],
+"tipo": "SAI_CONSULTORIO",
+"doente": doente,
+"medico": medico
+}
+```
 
 
 
-   
