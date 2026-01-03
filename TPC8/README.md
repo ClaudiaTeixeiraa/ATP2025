@@ -1089,7 +1089,7 @@ if modo not in modos_taxas:
         , title="Sucesso")
 ```
 
-## 5.4. Iniciar simulação
+### 5.4. Iniciar simulação
 
 Após a atualização das configurações no menu e a a execução do botão de início de simulação, o utilizador é apresentado a uma janela que já inicia a simulação.
 
