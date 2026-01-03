@@ -1389,7 +1389,7 @@ No entanto, as filas para as consultas têm valores já significaticos. Apesar d
 
 ### 6.4 Restantes informações
 
-No final da simulação incluímos mais gráficos para além destes. No entanto, não apresentam muita mais informação relevante, apenas de uma forma diferente e mais intuitiva. No entanto, todos os resultados que são obtidos pela análise se gráficos anteriores são os mesmos que obtemos nestes gráficos adicionais.
+No final da simulação incluímos mais gráficos para além destes que retratam outros parâmetros de uma forma diferente e mais intuitiva. No entanto, todos os resultados que são obtidos pela análise de gráficos anteriores são os mesmos que obtemos nestes gráficos adicionais.
 
 ## 7. Conclusões
 
