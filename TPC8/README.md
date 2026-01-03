@@ -61,6 +61,7 @@ Data: 6 de janeiro de 2026
 ### 6.1 Tamanho das Filas VS Tempo
 ### 6.2 Ocupação dos Médicos VS Tempo 
 ### 6.3 Tamanho das Filas de Espera VS Taxas de Chegada
+### 6.4 Restante informação
 
 ## 7. Conclusões
 ---
@@ -1385,6 +1386,10 @@ Conclui-se através da análise dos gráficos que tanto a triagem como a consult
 Na triagem, observa-se que os valores médios das filas são quase nulos, o que significa que os balões satisfazem eficazmente a chegada de doentes.
 
 No entanto, as filas para as consultas têm valores já significaticos. Apesar do número de consultõrios ser bem maior em relação aos balcões, as consultas demoram bem mais tempo, o que faz com que a taxa de entrada de pessoas por hora seja bem menor do que a taxa de entrada de pessoas nos balcões. Assim, é natural que o tamanho médio das filas para as consultas ser bem maior.
+
+### 6.4 Restantes informações
+
+No final da simulação incluímos mais gráficos para além destes. No entanto, não apresentam muita mais informação relevante, apenas de uma forma diferente e mais intuitiva. No entanto, todos os resultados que são obtidos pela análise se gráficos anteriores são os mesmos que obtemos nestes gráficos adicionais.
 
 ## 7. Conclusões
 
