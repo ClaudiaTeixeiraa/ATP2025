@@ -19,6 +19,7 @@ Data: 6 de janeiro de 2026
 
 ## 2. Funcionamento do Sistema
 ### 2.1 Enquadramento básico
+### 2.2 Parâmetros da Simulação
 
 ## 3. Ficheiros Base
 ### 3.1 Chegadas.py
@@ -151,6 +152,9 @@ Os médicos, em semelhança com os pacientes, são carregados de um ficheiro JSO
 Quando um consultório de uma secção fica disponível, o primeiro paciente da fila com consulta sai da fila e ocupa o consultório; caso a fila com consulta esteja vazia, o primeiro paciente da fila sem consulta ocupa o consultório. Os tempos de consulta seguem uma distribuição normal, sendo a média do tempo de consulta variável com a especialidade. Assim que um paciente sai da consulta, o seu estado é registrado como "ATENDIDO", e todos os dados registrados durante a simulação são utilizados para cálculos das métricas da simulação.
     
 No final, é possível extrair os resultados relativos a tempos médios de espera, tempos de consulta e atendimento, número de pacientes atendidos em balcões e consultórios, e taxa de ocupações de recursos.
+
+### 2.2 Parâmetros da simulação
+<img width="555" height="457" alt="image" src="https://github.com/user-attachments/assets/fc4328dd-bb24-4427-94d6-214ccf97771e" />
 
 ## 3. Ficheiros base
 ### 3.1. Chegadas
