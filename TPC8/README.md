@@ -156,6 +156,8 @@ No final, é possível extrair os resultados relativos a tempos médios de esper
 ### 2.2 Parâmetros da simulação
 <img width="555" height="457" alt="image" src="https://github.com/user-attachments/assets/fc4328dd-bb24-4427-94d6-214ccf97771e" />
 
+Importante é mencionar que a compreensão destes parâmetros exige a interpretação do projeto ou do relatório. 
+
 ## 3. Ficheiros base
 ### 3.1. Chegadas
 --
@@ -1020,11 +1022,16 @@ O menu da interface é a primeira janela que aparece assim que se inicia o progr
 - Ajuda- abre uma janela que explica brevemente a lógica e funcionamento do programa;
 - Sair- fecha a janela do menu e encerra o programa.
 
+<img width="288" height="352" alt="image" src="https://github.com/user-attachments/assets/f6b1a8cb-4b86-42bd-baf9-410a36230b26" />
+
 Na verdade, o item menu é a última parte da interface a ficar concluída, já que é necessário que todas as outras funcionalidades estejam prevamente prontas para poderem ser adicionadas e vinculadas às funcionalidades dos botões.
 
 ### 5.2. Ajuda
 
 A interface da janela Ajuda mostra um texto que dá um pequeno contexto da trajetório e do fluxo dos doentes da clínica, como é que os diferentes recursos funcionam e alguns dos parâmetros que são registados e que são alteráveis. Adicionalmente, dá instruções e esclarecimentos das funcionalidades e informações das restantes janelas da interface.
+
+<img width="662" height="518" alt="image" src="https://github.com/user-attachments/assets/0e10979f-eb7d-4d9e-8980-44d33b966019" />
+
 
 Também a janela de Ajuda é bastante simples. A janela continua aberta até que o botão de voltar ao menu seja premido, que desencadeia o fecho da janela, e o Menu é interagível novamente. A funcionalidade "modal" está definida com esta janela, a qual permite que a janela de Menu continue aberta em simultâneo com a janela de Ajuda, mas não é possível interagir com ela.
 
@@ -1047,6 +1054,8 @@ Também existe um botão salvar e um botão cancelar. O botão salvar define os 
 Se os parâmetros forem inválidos, aparece uma janela de erro, a indicar a razão do erro. Adicionalmente, os parâmetros são restaurados para os parãmetros Default.
 
 Também a funcionalidade "finalize" está ativa. O objetivo desta funcionalidade é impedir alterar valores e informações desta janela assim que esta janela seja finalizada.
+
+<img width="695" height="285" alt="image" src="https://github.com/user-attachments/assets/00f58c6e-cdaf-432a-bcdf-9b90c7f41e40" />
 
 Para criar a janela de Configurações, foram utilizados novas funcionalidades. Para além das funcionalidades Button e Text, que criam, respetivamente, botões e caixas de texto, também foram utilizadas as funcionalidades Spin e Combo.
 
@@ -1097,6 +1106,8 @@ if modo not in modos_taxas:
 ### 5.4. Iniciar simulação
 
 Após a atualização das configurações no menu e a a execução do botão de início de simulação, o utilizador é apresentado a uma janela que já inicia a simulação.
+
+<img width="1262" height="570" alt="Captura de ecrã 2026-01-04 140231" src="https://github.com/user-attachments/assets/e452ff68-2cea-40e2-b913-44c19b7e4fbb" />
 
 Esta estrutura é obtida devido À interface desenvolvida num ficheiro entitulado "teste de interface". Esse ficheiro Python é responsável pela gestão da interface gráfica e pelo controlo da execução da simulação da clínica. Não contém a lógica principal da simulação, mas atua como camada de visualização, interação e monitorização dos estados internos do sistema, funcionando como uma camada intermédia entre o modelo e o utilizador final.
 
@@ -1239,6 +1250,8 @@ for sec_id, lista_consultorios in MAPA_CONSULTORIOS.items():
 
 Quando o utilizador clica num consultório, surge uma janela popup com informações detalhadas sobre os médicos e doentes naquele consultório.
 
+<img width="332" height="397" alt="image" src="https://github.com/user-attachments/assets/6ebaab86-bbad-465f-be97-b6e6d416b8d5" />
+
 Cada atualização dos consultórios depende do tempo da simulação (t atual). A cor dos botões é alterada de acordo com o estado do médico e do consultório de maneira instantânea em que se todos os consultórios da especialidade estiverem ocupados, a unidade fica a vermelho. Dentro de cada unidade, se o médico de cada consultório estiver ocupado, o consultório aparece a vermelho e se estiver fora de turno, aparece a cinzento até que o t atual coincida com o inicio de turno do mesmo.  
 
 #### 5.4.4. Botões de tempo médio de espera
@@ -1351,9 +1364,7 @@ Este gráfico, em particular, pode ajudar a perceber em que ponto do dia os dife
 
 De seguida, está um exemplo de um possível gráfico, com as configurações Default (5 balcões, dos quais 2 são prioritários e modos de chegada Default) que representa a evolução do tamanho das filas de espera para a triagem e para as consultas:
 
-    \begin{center}
-        \includegraphics[scale=0.42]{./Imagens/TAMVSTIME.png}
-    \end{center}
+<img width="1395" height="776" alt="image" src="https://github.com/user-attachments/assets/ed0bbb61-c7e6-4b46-8544-f55019a66e98" />
 
 Pelo que é possível observar no gráfico, a evolução do tamanho da fila de triagem não mostra grande preocupações quanto à sobrelotação dos balcões, o que significa que para uma afluência de cerca de 330 pacientes, os balcões conseguem atender facilemente todos os pacientes.
 
@@ -1365,9 +1376,7 @@ A ocupação dos médicos revela a resposta dos consultórios e da equipa de mé
 
 De seguida está um exemplo de um gráfico que mostra a evolução da taxa de ocupação dos médicos em função do tempo.
 
-    \begin{center}
-        \includegraphics[scale = 0.5]{./Imagens/OCUPVSTEMPO.png}
-    \end{center}
+<img width="1195" height="675" alt="image" src="https://github.com/user-attachments/assets/62492772-cb1c-4ab9-b4d4-0083c9936fe8" />
 
 Para perceber melhor este gráfico, é preciso conhecer os turnos dos médicos. No total são 23 médicos que trabalham durante 8 horas. Para facilitar a compreesnsão de resultados e a simulação em si, os turnos foram simplificados: cerca de metade dos médicos trabalham as primeiro 8 horas e a outra metade as últimas 8 horas. Isto faz com que haja uma sobreposição de turnos nas 4 horas a metade do dia, ou seja, a partir da quarta hora de funcionamento até à oitava hora todos os médicos estão em funções. 
 
@@ -1378,12 +1387,10 @@ Podemos verificar que na maioria do dia, as taxas de ocupação rondam os 50 por
 Esta informação ajuda a corroborar as conclusões retitadas nos \hyperlink{tam_filas_tempo}{gráficos que relacionam os tamanhos de fila de espera com o tempo} e complementam todas as outras informações retiradas da simulação.
 
 De seguida está um exemplo de um possível gráfico que relaciona o tamanho da fila de triagem com a taxa de chegada de pacientes e outro que relaciona o tamanho da fila para as consultas com a taxa de chegada de pacientes.
-```
-    \centering
-    \includegraphics[width=0.48\textwidth]{./Imagens/FILACONSVSTAXACHEG.png}
-    \hfill
-    \includegraphics[width=0.48\textwidth]{./Imagens/FILATRIAGVSTAXACHEG.png}
-```
+
+<img width="1394" height="776" alt="image" src="https://github.com/user-attachments/assets/fe7d5f39-c608-4cf2-8e06-9e2b23690e60" />
+
+<img width="1394" height="772" alt="image" src="https://github.com/user-attachments/assets/33aca862-e05e-40be-a0ab-99877f8d85a2" />
 
 Conclui-se através da análise dos gráficos que tanto a triagem como a consultório têm filas maiores em horas a seguir ao horário de pico. Isto ocorre porque apesar do stress de chegadas ser maior no horário de pico, o acúmulo de pessoas é crescente ao longo do dia caso a equipa de médicos não consiga vencer a chegada de pacientes. 
 
